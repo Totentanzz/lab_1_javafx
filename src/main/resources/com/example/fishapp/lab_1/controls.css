@@ -1,0 +1,40 @@
+#timeBar{
+    -fx-background-color: #ff0572;
+    -fx-effect: dropshadow(gaussian, #000000,10,0.2,3,3);
+}
+
+#startBar{
+    -fx-background-color: #2055b5;
+    -fx-effect: dropshadow(gaussian, #000000,10,0.5,0,1);
+}
+
+#startButton{
+    -fx-background-radius: 65px;
+    -fx-min-height: 65px;
+    -fx-min-width: 65px;
+    -fx-max-height: 65px;
+    -fx-max-width: 65px;
+    -fx-background-color: lime;
+    -fx-effect:innershadow(gaussian, #000000,10,0.5,0,1);
+    -fx-translate-x: -80px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 16px;
+    -fx-background-insets: 0;
+}
+
+#startButton:hover{
+    -fx-background-insets: 0;
+}
+
+
+#stopButton{
+    -fx-background-radius: 65px;
+    -fx-min-height: 65px;
+    -fx-min-width: 65px;
+    -fx-max-height: 65px;
+    -fx-max-width: 65px;
+    -fx-background-color: #ff2525;
+    -fx-effect: innershadow(gaussian,#000000,10,0.5,0,0);
+    -fx-translate-x: -20px;
+}

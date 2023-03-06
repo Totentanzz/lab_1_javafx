@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.stage.*?>
+
+<Stage fx:id="mainStage" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fishapp.lab_1.HabitatController">
+   <scene>
+      <Scene fx:id="mainScene" onKeyPressed="#setActionOnKey">
+         <root>
+            <SplitPane fx:id="rootPane" dividerPositions="0.2543940795559667" prefHeight="662.0" prefWidth="1083.0" stylesheets="@controls.css">
+               <Pane fx:id="controlPane" prefHeight="660.0" prefWidth="317.0">
+                  <children>
+                      <Label fx:id="statisticsLabel" layoutX="14.0" layoutY="281.0" prefHeight="34.0" prefWidth="103.0" text="Information" visible="false">
+                          <style>
+                              -fx-text-fill: purple;
+                              -fx-font: normal 13px "Bookman Old Style";
+                          </style>
+                      </Label>
+                      <Label fx:id="timeLabel" layoutX="14.0" layoutY="244.0" text="Simulation time: ">
+                          <style>
+                              -fx-text-fill: royalblue;
+                              -fx-font: 13px "Century Gothic"
+                          </style>
+                      </Label>
+                     <RadioButton layoutX="22.0" layoutY="165.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="136.0" text="Show information " />
+                     <ButtonBar fx:id="timeBar" layoutY="85.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="51.0" prefWidth="272.0">
+                        <buttons>
+                           <RadioButton minWidth="51.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="363.0" text="Show time">
+                              <font>
+                                 <Font name="Comic Sans MS" size="16.0" />
+                              </font>
+                              <toggleGroup>
+                                 <ToggleGroup fx:id="toggleGroup2" />
+                              </toggleGroup>
+                           </RadioButton>
+                           <RadioButton minWidth="64.0" mnemonicParsing="false" prefHeight="28.0" text="Hide time" toggleGroup="$toggleGroup2">
+                              <font>
+                                 <Font name="Comic Sans MS" size="16.0" />
+                              </font>
+                           </RadioButton>
+                        </buttons>
+                     </ButtonBar>
+                     <ButtonBar fx:id="startBar" prefHeight="84.0" prefWidth="272.0">
+                        <buttons>
+                           <Button fx:id="startButton" mnemonicParsing="false" prefHeight="29.0" text="Start">
+                              <font>
+                                 <Font name="Comic Sans MS" size="16.0" />
+                              </font>
+                           </Button>
+                           <Button fx:id="stopButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="114.0" text="Stop">
+                              <font>
+                                 <Font name="Comic Sans MS" size="16.0" />
+                              </font>
+                           </Button>
+                        </buttons>
+                        <padding>
+                           <Insets bottom="5.0" right="20.0" top="5.0" />
+                        </padding>
+                     </ButtonBar>
+                  </children>
+               </Pane>
+               <Pane fx:id="imagePane" prefHeight="636.0" prefWidth="507.0" />
+            </SplitPane>
+         </root>
+      </Scene>
+   </scene>
+</Stage>
