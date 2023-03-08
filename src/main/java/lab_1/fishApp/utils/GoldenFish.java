@@ -1,10 +1,10 @@
-package com.example.fishapp.lab_1;
+package lab_1.fishApp.utils;
 
 import java.io.FileNotFoundException;
 
 public class GoldenFish extends Fish implements IBehaviour {
 
-    GoldenFish(double x,double y,String imagePath) throws FileNotFoundException {
+    public GoldenFish(double x, double y, String imagePath) throws FileNotFoundException {
         super(x,y,imagePath);
     }
 

@@ -7,7 +7,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.stage.*?>
 
-<Stage fx:id="mainStage" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fishapp.lab_1.HabitatController">
+<Stage fx:id="mainStage" onCloseRequest="#handleCloseRequest" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lab_1.fishApp.controller.HabitatController">
    <scene>
       <Scene fx:id="mainScene" onKeyPressed="#setActionOnKey">
          <root>

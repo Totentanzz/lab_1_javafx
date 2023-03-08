@@ -1,4 +1,4 @@
-package com.example.fishapp.lab_1;
+package lab_1.fishApp.utils;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -6,7 +6,7 @@ import javafx.scene.image.ImageView;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-abstract class Fish {
+public abstract class Fish {
 
     Fish(double x, double y, String imagePath) throws FileNotFoundException {
         Image fishImage = new Image(new FileInputStream(imagePath));

@@ -1,8 +1,13 @@
-module com.example.fishapp.lab_1 {
+module lab_1.fishApp {
     requires javafx.controls;
     requires javafx.fxml;
 
-
-    opens com.example.fishapp.lab_1 to javafx.fxml;
-    exports com.example.fishapp.lab_1;
+    exports lab_1.fishApp;
+    opens lab_1.fishApp to javafx.graphics;
+    exports lab_1.fishApp.controller;
+    opens lab_1.fishApp.controller to javafx.fxml;
+    exports lab_1.fishApp.model;
+    opens lab_1.fishApp.model to javafx.fxml;
+    exports lab_1.fishApp.utils;
+    opens lab_1.fishApp.utils to javafx.fxml;
 }
