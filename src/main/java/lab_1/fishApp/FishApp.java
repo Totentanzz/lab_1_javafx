@@ -21,8 +21,8 @@ public class FishApp extends Application {
         habitatController.setHabitatModel(habitatModel);
         //Scene scene = new Scene(root.getScene().getRoot());
         //primaryStage.setScene(scene);
-        primaryStage.setWidth(1400);
-        primaryStage.setHeight(900);
+        //primaryStage.setWidth(1400);
+        //primaryStage.setHeight(900);
         primaryStage.setTitle("FishApp");
         primaryStage.show();
     }

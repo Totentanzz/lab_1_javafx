@@ -1,4 +1,4 @@
-package lab_1.fishApp.utils;
+package lab_1.fishApp.model;
 
 public interface IBehaviour {
 }

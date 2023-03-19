@@ -1,4 +1,4 @@
-package lab_1.fishApp.utils;
+package lab_1.fishApp.model;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

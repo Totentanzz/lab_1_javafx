@@ -1,12 +1,5 @@
 package lab_1.fishApp.model;
 
-import lab_1.fishApp.FishApp;
-import lab_1.fishApp.utils.Fish;
-import lab_1.fishApp.utils.FishArray;
-import lab_1.fishApp.utils.GoldenFish;
-import lab_1.fishApp.utils.GuppyFish;
-import lab_1.fishApp.controller.HabitatController;
-
 import java.io.FileNotFoundException;
 import java.util.*;
 
