@@ -4,6 +4,7 @@ import javafx.animation.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import lab_1.fishApp.DialogWindow;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 import lab_1.fishApp.model.GoldenFish;
 import lab_1.fishApp.model.GuppyFish;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.*;
@@ -35,6 +37,10 @@ public class HabitatController implements Initializable {
     private Button stopButton;
     @FXML
     private Label statisticsLabel;
+    @FXML
+    private CheckBox checkBox;
+    @FXML
+    private ToggleGroup timeToggleGroup;
     @FXML
     private ComboBox<String> goldenBox;
     @FXML
@@ -72,17 +78,13 @@ public class HabitatController implements Initializable {
     }
 
     @FXML
-    private void setActionOnKey(KeyEvent keyEvent){
+    private void setActionOnKey(KeyEvent keyEvent) throws FileNotFoundException {
         KeyCode pressedKey = keyEvent.getCode();
         if (pressedKey==KeyCode.B && timer.getStatus() == Animation.Status.STOPPED) {
-            System.out.println("Pressed B");
-            imagePane.getChildren().removeIf(node -> (node instanceof ImageView));
+            System.out.println("Started simulating");
             startSimulation();
         }
         else if (pressedKey==KeyCode.E && timer.getStatus() == Animation.Status.RUNNING){
-            Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
-            infoAlert.setTitle("Information window");
-            infoAlert.setContentText(statisticsLabel.getText());
             stopSimulation();
             System.out.println("Simulation has stopped");
         }
@@ -106,19 +108,37 @@ public class HabitatController implements Initializable {
     }
 
     private void startSimulation() {
+        imagePane.getChildren().removeIf(node -> (node instanceof ImageView));
         simulationTime = Duration.ZERO;
         startFlag = true;
         statisticsLabel.setVisible(false);
         timer.playFromStart();
     }
 
-    private void stopSimulation() {
-        timer.pause();
-        DialogWindow<ButtonType> window = new DialogWindow<>(DialogWindow.DialogType.STATISTICS);
-        if (window.showAndWait().get()==ButtonType.CANCEL){
+    private void stopSimulation() throws FileNotFoundException {
+        if (checkBox.isSelected()) {
+            timer.pause();
+            refreshStatisticsLabel();
+            ImageView goldView =habitatModel.createFish(1000,1000,GoldenFish.class).getView();
+            ImageView guppyView =habitatModel.createFish(1000,1000,GuppyFish.class).getView();
+            DialogWindow<ButtonType> window = new DialogWindow<>(DialogWindow.DialogType.STATISTICS,
+                    statisticsLabel.getText(),goldView,guppyView);
+            window.initOwner(mainStage);
+            if (window.showAndWait().get()==ButtonType.OK){
+                stopAndClear();
+            }
+            else {
+                timer.play();
+            }
         }
+        else {
+            refreshStatisticsLabel();
+            stopAndClear();
+        }
+    }
+
+    private void stopAndClear() {
         timer.stop();
-        refreshStatisticsLabel();
         showLabel(statisticsLabel);
         habitatModel.clearFishList();
         startFlag=false;
@@ -186,7 +206,7 @@ public class HabitatController implements Initializable {
         timer.setCycleCount(Animation.INDEFINITE);
     }
 
-    private void initSpinnersListeners(){
+    private void initSpinners(){
         goldenSpinner.valueProperty().addListener((observableValue, oldValue, newValue) ->{
             System.out.println(habitatModel.getGoldenSpawnTime());
             habitatModel.setGoldenSpawnTime(newValue);
@@ -197,18 +217,31 @@ public class HabitatController implements Initializable {
             habitatModel.setGuppySpawnTime(newValue);
             System.out.println(habitatModel.getGuppySpawnTime());
         });
+        Stream.of(goldenSpinner,guppySpinner).forEach(spinner->spinner.getEditor()
+                .setTextFormatter(new TextFormatter<Integer>(change -> {
+                    String input = change.getControlNewText();
+                    if (input.matches("[0-9]*")){
+                        try{
+                            int value = Integer.parseInt(input);
+                            if (value>0 && value<=1000){
+                                return change;
+                            }
+                        } catch (NumberFormatException exception){}
+                    }
+                    return null;
+                })));
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         startFlag = false;
         initTimer();
-        initSpinnersListeners();
+        initSpinners();
         ObservableList<String> boxChoices = IntStream.rangeClosed(0,100).filter(i->i%10==0).mapToObj(
                 Integer::toString).collect(Collectors.toCollection(FXCollections::observableArrayList));
-        Stream<ComboBox> stream = Stream.of(goldenBox,guppyBox);
-        stream.peek(box->box.setItems(boxChoices)).forEach(box->box.getSelectionModel().select(10));
-        //Stream.of(goldenSpinner,guppySpinner).forEach();
+        Stream.of(goldenBox,guppyBox).peek(box->box.setItems(boxChoices)).forEach(box->
+                box.getSelectionModel().select(10));
+        //stream.peek(box->box.setItems(boxChoices)).forEach(box->box.getSelectionModel().select(10));
     }
 
 }

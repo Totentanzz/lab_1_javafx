@@ -1,5 +1,7 @@
 package lab_1.fishApp.model;
 
+import javafx.scene.image.ImageView;
+
 import java.io.FileNotFoundException;
 import java.util.*;
 
@@ -91,5 +93,14 @@ public class HabitatModel {
         }
         return createdFish;
     }
+
+//    public static ImageView getFishExample(int viewWidth, int viewHeight, Class clazz) {
+//        if (clazz==GoldenFish.class) {
+//
+//        }
+//        else if (clazz==GuppyFish.class) {
+//
+//        }
+//    }
 
 }

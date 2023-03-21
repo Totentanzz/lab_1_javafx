@@ -1,9 +1,16 @@
 package lab_1.fishApp;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Modality;
+
+import java.util.stream.Stream;
 
 public class DialogWindow<T> extends Dialog<T> {
 
@@ -11,29 +18,36 @@ public class DialogWindow<T> extends Dialog<T> {
     private Text text;
 
     public DialogWindow(DialogType dialogType) {
-        this(dialogType,"");
+        this(dialogType,"",new ImageView(),new ImageView());
     }
 
-    public DialogWindow(DialogType dialogType, String contentText){
-        TextArea consoleField = new TextArea();
-        text = new Text(contentText);
-        textFlow = new TextFlow(text);
+    public DialogWindow(DialogType dialogType, String contentText, ImageView firstView, ImageView secondView){
         this.getDialogPane().setPrefWidth(600);
         this.getDialogPane().setPrefHeight(300);
         switch (dialogType){
             case STATISTICS:
-                this.setTitle("Statistics window");
+                String[] contentLines = contentText.split("\n");
+                Label firstLabel = new Label(contentLines[0]);
+                Label secondLabel = new Label(contentLines[1]);
+                Stream.of(firstLabel,secondLabel).forEach(label->label.setStyle("-fx-font-size: 16; -fx-font-weight: bold;"));
+                Stream.of(firstView,secondView).forEach(view->view.setFitHeight(29));
+                HBox firstBox = new HBox(firstView,firstLabel);
+                HBox secondBox = new HBox(secondView,secondLabel);
+                VBox contentBox = new VBox(firstBox,secondBox);
+                this.initModality(Modality.WINDOW_MODAL);
+                this.getDialogPane().setContent(contentBox);
                 this.getDialogPane().getButtonTypes().addAll(ButtonType.OK,ButtonType.CANCEL);
-                this.getDialogPane().setContent(textFlow);
-                this.getDialogPane().setPrefWidth(textFlow.getPrefWidth());
-                this.getDialogPane().setPrefHeight(textFlow.getPrefHeight());
+                this.getDialogPane().setPrefWidth(contentBox.getPrefWidth());
+                this.getDialogPane().setPrefHeight(contentBox.getPrefHeight());
+                this.setTitle("Statistics window");
                 break;
             case CONSOLE:
-                this.setTitle("Console window");
-                this.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-                this.getDialogPane().setContent(consoleField);
+                TextArea consoleField = new TextArea();
                 consoleField.setStyle("-fx-background-color: transparent; -fx-text-fill: white; " +
-                    "-fx-font-size: 16; -fx-control-inner-background: black; -fx-font-weight: bold");
+                        "-fx-font-size: 16; -fx-control-inner-background: black; -fx-font-weight: bold");
+                this.getDialogPane().setContent(consoleField);
+                this.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+                this.setTitle("Console window");
         }
     }
 

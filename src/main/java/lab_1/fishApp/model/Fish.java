@@ -10,12 +10,12 @@ public abstract class Fish {
 
     Fish(double x, double y, String imagePath) throws FileNotFoundException {
         Image fishImage = new Image(new FileInputStream(imagePath));
-        fishView = new ImageView(fishImage);
-        fishView.setPreserveRatio(true);
-        fishView.setX(x);
-        fishView.setY(y);
-        fishView.setFitWidth(90);
-        fishView.setFitHeight(90);
+        this.fishView = new ImageView(fishImage);
+        this.fishView.setPreserveRatio(true);
+        this.fishView.setX(x);
+        this.fishView.setY(y);
+        this.fishView.setFitWidth(90);
+        this.fishView.setFitHeight(90);
     }
 
     public ImageView getView(){
