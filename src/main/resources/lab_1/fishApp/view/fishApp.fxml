@@ -40,7 +40,7 @@
                                        <Font name="Verdana Bold" size="12.0" />
                                     </font>
                                  </Label>
-                                 <Spinner fx:id="goldenSpinner" editable="true" prefHeight="25.0" prefWidth="94.0" min="0" max="1000" amountToStepBy="1" initialValue="1"/>
+                                 <Spinner fx:id="goldenSpinner" editable="true" prefHeight="25.0" prefWidth="94.0" min="0" max="1000" amountToStepBy="1" initialValue="3"/>
                               </children>
                            </HBox>
                            <HBox alignment="CENTER" layoutY="57.0" prefHeight="32.0" prefWidth="521.0" spacing="10.0" AnchorPane.bottomAnchor="163.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="57.0">
@@ -61,7 +61,7 @@
                                        <Font name="Verdana Bold" size="12.0" />
                                     </font>
                                  </Label>
-                                 <Spinner fx:id="guppySpinner" editable="true" prefHeight="25.0" prefWidth="94.0" min="0" max="1000" amountToStepBy="1" initialValue="1"/>
+                                 <Spinner fx:id="guppySpinner" editable="true" prefHeight="25.0" prefWidth="94.0" min="0" max="1000" amountToStepBy="1" initialValue="5"/>
                               </children>
                            </HBox>
                            <HBox accessibleRole="TOOL_BAR" alignment="CENTER" focusTraversable="true" layoutY="104.0" prefHeight="38.0" prefWidth="521.0" spacing="30.0" AnchorPane.bottomAnchor="111.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="104.0">

@@ -113,6 +113,10 @@ public class HabitatController implements Initializable {
     }
 
     private void stopSimulation() {
+        timer.pause();
+        DialogWindow<ButtonType> window = new DialogWindow<>(DialogWindow.DialogType.STATISTICS);
+        if (window.showAndWait().get()==ButtonType.CANCEL){
+        }
         timer.stop();
         refreshStatisticsLabel();
         showLabel(statisticsLabel);
@@ -182,10 +186,24 @@ public class HabitatController implements Initializable {
         timer.setCycleCount(Animation.INDEFINITE);
     }
 
+    private void initSpinnersListeners(){
+        goldenSpinner.valueProperty().addListener((observableValue, oldValue, newValue) ->{
+            System.out.println(habitatModel.getGoldenSpawnTime());
+            habitatModel.setGoldenSpawnTime(newValue);
+            System.out.println(habitatModel.getGoldenSpawnTime());
+        });
+        guppySpinner.valueProperty().addListener((observableValue, oldValue, newValue) ->{
+            System.out.println(habitatModel.getGuppySpawnTime());
+            habitatModel.setGuppySpawnTime(newValue);
+            System.out.println(habitatModel.getGuppySpawnTime());
+        });
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         startFlag = false;
         initTimer();
+        initSpinnersListeners();
         ObservableList<String> boxChoices = IntStream.rangeClosed(0,100).filter(i->i%10==0).mapToObj(
                 Integer::toString).collect(Collectors.toCollection(FXCollections::observableArrayList));
         Stream<ComboBox> stream = Stream.of(goldenBox,guppyBox);
