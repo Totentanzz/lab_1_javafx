@@ -24,44 +24,44 @@
                         <children>
                            <HBox alignment="CENTER" prefHeight="53.0" prefWidth="521.0" spacing="10.0" AnchorPane.bottomAnchor="216.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                               <children>
-                                 <Label text="Golden fish:" textFill="#a972cb">
+                                 <Label focusTraversable="false" text="Golden fish:" textFill="#a972cb">
                                     <font>
                                        <Font name="Verdana Bold" size="12.0" />
                                     </font>
                                  </Label>
-                                 <Label text="Spawn chacne (%)" textFill="#a972cb">
+                                 <Label focusTraversable="false" text="Spawn chacne (%)" textFill="#a972cb">
                                     <font>
                                        <Font name="Verdana Bold" size="12.0" />
                                     </font>
                                  </Label>
-                                 <Spinner editable="true" prefHeight="25.0" prefWidth="95.0" />
-                                 <Label text="Spawn rate (s)" textFill="#a972cb">
+                                 <ComboBox fx:id="goldenBox" onAction="#setGoldenChance" prefHeight="25.0" prefWidth="103.0"/>
+                                 <Label focusTraversable="false" text="Spawn rate (s)" textFill="#a972cb">
                                     <font>
                                        <Font name="Verdana Bold" size="12.0" />
                                     </font>
                                  </Label>
-                                 <Spinner editable="true" prefHeight="25.0" prefWidth="94.0" />
+                                 <Spinner fx:id="goldenSpinner" editable="true" prefHeight="25.0" prefWidth="94.0" min="0" max="1000" amountToStepBy="1" initialValue="1"/>
                               </children>
                            </HBox>
                            <HBox alignment="CENTER" layoutY="57.0" prefHeight="32.0" prefWidth="521.0" spacing="10.0" AnchorPane.bottomAnchor="163.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="57.0">
                               <children>
-                                 <Label text="Guppy fish:" textFill="#a972cb">
+                                 <Label focusTraversable="false" text="Guppy fish:" textFill="#a972cb">
                                     <font>
                                        <Font name="Verdana Bold" size="12.0" />
                                     </font>
                                  </Label>
-                                 <Label text="Spawn chacne (%)" textFill="#a972cb">
+                                 <Label focusTraversable="false" text="Spawn chacne (%)" textFill="#a972cb">
                                     <font>
                                        <Font name="Verdana Bold" size="12.0" />
                                     </font>
                                  </Label>
-                                 <Spinner editable="true" prefHeight="25.0" prefWidth="95.0" />
-                                 <Label text="Spawn rate (s)" textFill="#a972cb">
+                                 <ComboBox fx:id="guppyBox" onAction="#setGuppyChance" prefHeight="25.0" prefWidth="103.0" />
+                                 <Label focusTraversable="false" text="Spawn rate (s)" textFill="#a972cb">
                                     <font>
                                        <Font name="Verdana Bold" size="12.0" />
                                     </font>
                                  </Label>
-                                 <Spinner editable="true" prefHeight="25.0" prefWidth="94.0" />
+                                 <Spinner fx:id="guppySpinner" editable="true" prefHeight="25.0" prefWidth="94.0" min="0" max="1000" amountToStepBy="1" initialValue="1"/>
                               </children>
                            </HBox>
                            <HBox accessibleRole="TOOL_BAR" alignment="CENTER" focusTraversable="true" layoutY="104.0" prefHeight="38.0" prefWidth="521.0" spacing="30.0" AnchorPane.bottomAnchor="111.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="104.0">
@@ -89,7 +89,7 @@
                                  <Insets left="20.0" />
                               </padding>
                            </HBox>
-                           <HBox alignment="CENTER" layoutY="174.0" prefHeight="97.0" prefWidth="561.0" spacing="30.0" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="174.0">
+                           <HBox alignment="CENTER" focusTraversable="true" layoutY="174.0" prefHeight="97.0" prefWidth="561.0" spacing="30.0" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="174.0">
                               <children>
                                  <Button fx:id="startButton" mnemonicParsing="false" prefHeight="57.0" prefWidth="107.0" style="-fx-background-color: #333333; -fx-border-color: #8fc866; -fx-border-width: 4; -fx-text-fill: #8fc866" text="START" textFill="#8fc866">
                                     <font>
