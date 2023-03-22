@@ -1,10 +1,9 @@
 package lab_1.fishApp.controller;
 
-import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import lab_1.fishApp.DialogWindow;
@@ -20,7 +19,6 @@ import javafx.stage.Stage;
 import lab_1.fishApp.model.GoldenFish;
 import lab_1.fishApp.model.GuppyFish;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.*;
@@ -62,11 +60,8 @@ public class HabitatController implements Initializable {
     private HabitatModel habitatModel;
     private boolean startFlag;
     private Duration simulationTime;
-    //private Timer timer;
-    private Timeline timer;
-    private KeyFrame timerEvent;
-    @FXML
-    private Button baton;
+    private Timer timer;
+    private TimerTask simulationTask;
 
     public void setHabitatModel(HabitatModel model){
         this.habitatModel=model;
@@ -74,17 +69,17 @@ public class HabitatController implements Initializable {
 
     @FXML
     private void handleCloseRequest(){
-        timer.stop();
+        timer.cancel();
     }
 
     @FXML
     private void setActionOnKey(KeyEvent keyEvent) throws FileNotFoundException {
         KeyCode pressedKey = keyEvent.getCode();
-        if (pressedKey==KeyCode.B && timer.getStatus() == Animation.Status.STOPPED) {
+        if (pressedKey==KeyCode.B && !startFlag) {
             System.out.println("Started simulating");
             startButton.fire();
         }
-        else if (pressedKey==KeyCode.E && timer.getStatus() == Animation.Status.RUNNING){
+        else if (pressedKey==KeyCode.E && startFlag){
             stopButton.fire();
             System.out.println("Simulation has stopped");
         }
@@ -96,16 +91,12 @@ public class HabitatController implements Initializable {
 
     @FXML
     private void setGoldenChance(){
-        System.out.println(habitatModel.getGoldenSpawnChance());
         habitatModel.setGoldenSpawnChance(Short.valueOf(goldenBox.getValue()));
-        System.out.println(habitatModel.getGoldenSpawnChance());
     }
 
     @FXML
     private void setGuppyChance(){
-        System.out.println(habitatModel.getGuppySpawnChance());
         habitatModel.setGuppySpawnChance(Short.valueOf(guppyBox.getValue()));
-        System.out.println(habitatModel.getGuppySpawnChance());
     }
 
     private void startSimulation() {
@@ -113,12 +104,13 @@ public class HabitatController implements Initializable {
         simulationTime = Duration.ZERO;
         startFlag = true;
         statisticsLabel.setVisible(false);
-        timer.playFromStart();
+        initTimerTask();
     }
 
     private void stopSimulation() throws FileNotFoundException {
+        simulationTask.cancel();
+        timer.purge();
         if (checkBox.isSelected()) {
-            timer.pause();
             refreshStatisticsLabel();
             ImageView goldView =habitatModel.createFish(1000,1000,GoldenFish.class).getView();
             ImageView guppyView =habitatModel.createFish(1000,1000,GuppyFish.class).getView();
@@ -129,7 +121,7 @@ public class HabitatController implements Initializable {
                 stopAndClear();
             }
             else {
-                timer.play();
+                initTimerTask();
             }
         }
         else {
@@ -139,7 +131,6 @@ public class HabitatController implements Initializable {
     }
 
     private void stopAndClear() {
-        timer.stop();
         showLabel(statisticsLabel);
         habitatModel.clearFishList();
         startFlag=false;
@@ -165,18 +156,10 @@ public class HabitatController implements Initializable {
         Random randomGenerator = new Random();
         int generatedDigit = randomGenerator.nextInt(100);
         if ((time%goldenSpawnTime==0)&&(generatedDigit<goldenSpawnChance)){
-//            x = (int) controller.getControlPane().getWidth() + randomGenerator.
-//                    nextInt((int) controller.getImagePane().getWidth()-120);
-//            y = (int) controller.getControlPane().getHeight() + randomGenerator.
-//                    nextInt((int)controller.getImagePane().getHeight()-120);
             Fish createdFish=habitatModel.createFish(xBound, yBound, GoldenFish.class);
             imagePane.getChildren().add(createdFish.getView());
         }
         if ((time%guppySpawnTime==0)&&(generatedDigit<guppySpawnChance)){
-//            x = (int) controller.getControlPane().getWidth() + randomGenerator.
-//                    nextInt((int) controller.getImagePane().getWidth()-120);
-//            y = (int) controller.getControlPane().getHeight() + randomGenerator.
-//                    nextInt((int)controller.getImagePane().getHeight()-120);
             Fish createdFish=habitatModel.createFish(xBound,yBound, GuppyFish.class);
             imagePane.getChildren().add(createdFish.getView());
         }
@@ -194,22 +177,21 @@ public class HabitatController implements Initializable {
                                 "Guppy fish (pepe-dancer): " + guppyAmount);
     }
 
-    private void switchStartButtons() {
-        startButton.setDisable(!stopButton.isDisabled());
-        stopButton.setDisable(!startButton.isDisable());
-    }
-
-    private void initTimer(){
-        timerEvent = new KeyFrame(Duration.seconds(1), timerEvent->{
-            simulationTime = simulationTime.add(Duration.seconds(1));
-            try {
-                update((long) simulationTime.toSeconds());
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+    private void initTimerTask(){
+        simulationTask = new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(()->{
+                    simulationTime = simulationTime.add(Duration.seconds(1));
+                    try {
+                        update((long) simulationTime.toSeconds());
+                    } catch (FileNotFoundException exception) {
+                        throw new RuntimeException(exception);
+                    }
+                });
             }
-        });
-        timer = new Timeline(timerEvent);
-        timer.setCycleCount(Animation.INDEFINITE);
+        };
+        timer.schedule(simulationTask,0,1000);
     }
 
     private void initSpinners(){
@@ -271,7 +253,7 @@ public class HabitatController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         startFlag = false;
-        initTimer();
+        timer = new Timer();
         initSpinners();
         initRadioButtons();
         initStartButtons();
