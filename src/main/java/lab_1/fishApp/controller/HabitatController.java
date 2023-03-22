@@ -82,14 +82,15 @@ public class HabitatController implements Initializable {
         KeyCode pressedKey = keyEvent.getCode();
         if (pressedKey==KeyCode.B && timer.getStatus() == Animation.Status.STOPPED) {
             System.out.println("Started simulating");
-            startSimulation();
+            startButton.fire();
         }
         else if (pressedKey==KeyCode.E && timer.getStatus() == Animation.Status.RUNNING){
-            stopSimulation();
+            stopButton.fire();
             System.out.println("Simulation has stopped");
         }
         else if (pressedKey==KeyCode.T){
-            showLabel(timeLabel);
+            timeToggleGroup.selectToggle(timeLabel.isVisible() ? timeToggleGroup
+                    .getToggles().get(1) : timeToggleGroup.getToggles().get(0));
         }
     }
 
@@ -193,6 +194,11 @@ public class HabitatController implements Initializable {
                                 "Guppy fish (pepe-dancer): " + guppyAmount);
     }
 
+    private void switchStartButtons() {
+        startButton.setDisable(!stopButton.isDisabled());
+        stopButton.setDisable(!startButton.isDisable());
+    }
+
     private void initTimer(){
         timerEvent = new KeyFrame(Duration.seconds(1), timerEvent->{
             simulationTime = simulationTime.add(Duration.seconds(1));
@@ -232,16 +238,47 @@ public class HabitatController implements Initializable {
                 })));
     }
 
+    private void initRadioButtons() {
+        ObservableList<Toggle> toggles = timeToggleGroup.getToggles();
+        showLabel(timeLabel);
+        toggles.get(0).selectedProperty().addListener(observable -> {
+            timeLabel.setVisible(true);
+        });
+        toggles.get(1).selectedProperty().addListener(observable -> {
+            timeLabel.setVisible(false);
+        });
+    }
+
+    private void initStartButtons() {
+        startButton.setOnAction(actionEvent -> {
+            startSimulation();
+            startButton.setDisable(true);
+            stopButton.setDisable(false);
+        });
+        stopButton.setOnAction(actionEvent -> {
+            try {
+                stopSimulation();
+                if (!startFlag){
+                    startButton.setDisable(false);
+                    stopButton.setDisable(true);
+                }
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         startFlag = false;
         initTimer();
         initSpinners();
+        initRadioButtons();
+        initStartButtons();
         ObservableList<String> boxChoices = IntStream.rangeClosed(0,100).filter(i->i%10==0).mapToObj(
                 Integer::toString).collect(Collectors.toCollection(FXCollections::observableArrayList));
         Stream.of(goldenBox,guppyBox).peek(box->box.setItems(boxChoices)).forEach(box->
                 box.getSelectionModel().select(10));
-        //stream.peek(box->box.setItems(boxChoices)).forEach(box->box.getSelectionModel().select(10));
     }
 
 }
