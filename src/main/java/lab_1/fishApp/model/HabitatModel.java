@@ -1,106 +1,108 @@
 package lab_1.fishApp.model;
 
-import javafx.scene.image.ImageView;
-
 import java.io.FileNotFoundException;
 import java.util.*;
 
 
 public class HabitatModel {
 
-    private static final String goldenImagePath, guppyImagePath;
     private int goldenSpawnTime, guppySpawnTime;
+    private int goldenLifeTime,guppyLifeTime;
     private short goldenSpawnChance, guppySpawnChance;
-    private static ArrayList<Fish> fishArrayList;
+    private static FishData fishData;
 
     public HabitatModel() {
+        fishData = FishData.getInstance();
         goldenSpawnTime = 3;
         guppySpawnTime = 5;
+        goldenLifeTime = 15;
+        guppyLifeTime = 25;
         goldenSpawnChance = 100;
         guppySpawnChance = 100;
     }
 
-    static{
-        goldenImagePath = "src/main/resources/lab_1/fishApp/gifs/clown-pepe.gif";
-        guppyImagePath = "src/main/resources/lab_1/fishApp/gifs/dance-pepe.gif";
-        fishArrayList = FishArray.getInstance().getFishArrayList();
+    public void setGoldenSpawnTime(int newTime){
+        this.goldenSpawnTime=newTime;
     }
 
-    public void setGoldenSpawnTime(int newTime){
-        goldenSpawnTime=newTime;
-    }
     public int getGoldenSpawnTime(){
-        return goldenSpawnTime;
+        return this.goldenSpawnTime;
     }
-    public void setGuppySpawnTime(int newTime){
-        guppySpawnTime=newTime;
+
+    public void setGoldenLifeTime(int newTime) {
+        this.goldenLifeTime = newTime;
     }
-    public int getGuppySpawnTime(){
-        return guppySpawnTime;
+
+    public int getGoldenLifeTime(){
+        return this.goldenLifeTime;
     }
 
     public void setGoldenSpawnChance(short newChance) {
         if (newChance>=0 && newChance<=100){
-            goldenSpawnChance=newChance;
+            this.goldenSpawnChance=newChance;
         }
     }
     public short getGoldenSpawnChance(){
-        return goldenSpawnChance;
+        return this.goldenSpawnChance;
     }
+
+    public void setGuppySpawnTime(int newTime){
+        this.guppySpawnTime=newTime;
+    }
+
+    public int getGuppySpawnTime(){
+        return this.guppySpawnTime;
+    }
+
+    public void setGuppyLifeTime(int newTime) {
+        this.guppyLifeTime = newTime;
+    }
+
+    public int getGuppyLifeTime(){
+        return this.guppyLifeTime;
+    }
+
     public void setGuppySpawnChance(short newChance) {
         if (newChance>=0 && newChance<=100){
-            guppySpawnChance=newChance;
+            this.guppySpawnChance=newChance;
         }
     }
     public short getGuppySpawnChance(){
-        return guppySpawnChance;
+        return this.guppySpawnChance;
     }
 
-    public ArrayList<Fish> getFishArrayList(){
-        return fishArrayList;
-    }
-
-    public void addFishToList(Fish fish){
-        fishArrayList.add(fish);
-    }
-
-    public void clearFishList(){
-        fishArrayList.clear();
+    public FishData getFishData() {
+        return this.fishData;
     }
 
     public long getFishAmount(Class clazz){
         long fishAmount = -1;
         if (clazz==GoldenFish.class || clazz== GuppyFish.class){
-            fishAmount=fishArrayList.stream().filter(obj -> obj.getClass()==clazz).count();
+            fishAmount=fishData.fishList.stream().filter(obj -> obj.getClass()==clazz).count();
         }
         return fishAmount;
     }
 
-    public Fish createFish(double xBound, double yBound,Class clazz) throws FileNotFoundException {
+    public Fish createFish(double xBound, double yBound, int id, int birthTime, Class clazz) throws FileNotFoundException {
         Random randomGenerator = new Random();
         int x=randomGenerator.nextInt((int)xBound);
         int y=randomGenerator.nextInt((int)yBound);
         Fish createdFish = null;
         if (clazz==GoldenFish.class){
-            GoldenFish goldenFish = new GoldenFish(x,y,goldenImagePath);
-            addFishToList(goldenFish);
+            GoldenFish goldenFish = new GoldenFish(x,y,id,birthTime);
+            fishData.fishList.add(goldenFish);
+            fishData.idSet.add(id);
+            fishData.birthTimeTree.put(id, birthTime);
             createdFish = goldenFish;
         }
         else if (clazz==GuppyFish.class){
-            GuppyFish guppyFish = new GuppyFish(x,y,guppyImagePath);
-            addFishToList(guppyFish);
+            GuppyFish guppyFish = new GuppyFish(x,y,id,birthTime);
+            fishData.fishList.add(guppyFish);
+            fishData.idSet.add(id);
+            fishData.birthTimeTree.put(id, birthTime);
             createdFish = guppyFish;
         }
         return createdFish;
     }
-
-//    public static ImageView getFishExample(int viewWidth, int viewHeight, Class clazz) {
-//        if (clazz==GoldenFish.class) {
-//
-//        }
-//        else if (clazz==GuppyFish.class) {
-//
-//        }
-//    }
 
 }

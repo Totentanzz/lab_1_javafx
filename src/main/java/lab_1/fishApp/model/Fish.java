@@ -8,19 +8,75 @@ import java.io.FileNotFoundException;
 
 public abstract class Fish {
 
-    Fish(double x, double y, String imagePath) throws FileNotFoundException {
+    private ImageView imageView;
+    private int xCoord, yCoord;
+    private int birthTime;
+    private int id;
+
+    Fish(String imagePath) throws FileNotFoundException {
+        this(0,0,0,0,imagePath);
+    }
+
+    Fish(double x, double y, int id, int birthTime, String imagePath) throws FileNotFoundException {
         Image fishImage = new Image(new FileInputStream(imagePath));
-        this.fishView = new ImageView(fishImage);
-        this.fishView.setPreserveRatio(true);
-        this.fishView.setX(x);
-        this.fishView.setY(y);
-        this.fishView.setFitWidth(90);
-        this.fishView.setFitHeight(90);
+        this.imageView = new ImageView(fishImage);
+        this.imageView.setPreserveRatio(true);
+        this.imageView.setX(x);
+        this.imageView.setY(y);
+        this.imageView.setFitWidth(90);
+        this.imageView.setFitHeight(90);
+        this.birthTime=birthTime;
+        this.id = id;
+        this.xCoord= (int) x;
+        this.yCoord= (int) y;
     }
 
-    public ImageView getView(){
-        return this.fishView;
+    Fish(Fish object) {
+        this.imageView = new ImageView(object.getImageView().getImage());
+        this.birthTime = object.birthTime;
+        this.id = object.id;
+        this.xCoord = object.xCoord;
+        this.yCoord = object.yCoord;
     }
 
-    private final ImageView fishView;
+    public ImageView getImageView(){
+        return this.imageView;
+    }
+
+    public void setImageView(ImageView newImageView) {
+        this.imageView = newImageView;
+    }
+
+    public int getBirthTime(){
+        return this.birthTime;
+    }
+
+    public void setBirthTime(int newTime){
+        this.birthTime=newTime;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int newId) {
+        this.id = newId;
+    }
+
+    public int getXCoord() {
+        return this.xCoord;
+    }
+
+    public void setXCoord(int newXCoord) {
+        this.xCoord=newXCoord;
+    }
+
+    public int getYCoord() {
+        return this.yCoord;
+    }
+
+    public void setYcoord(int newYCoord) {
+        this.yCoord=newYCoord;
+    }
+
 }
