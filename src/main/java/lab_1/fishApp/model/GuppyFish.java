@@ -10,8 +10,8 @@ public class GuppyFish extends Fish implements IBehaviour {
         super(guppyImagePath);
     }
 
-    public GuppyFish(double x, double y, int id, int birthTime) throws FileNotFoundException {
-        super(x,y,id,birthTime,guppyImagePath);
+    public GuppyFish(double x, double y, int xVelocity, int yVelocity, int id, int birthTime) throws FileNotFoundException {
+        super(x,y,xVelocity,yVelocity,id,birthTime,guppyImagePath);
     }
 
     public GuppyFish(GuppyFish object) {

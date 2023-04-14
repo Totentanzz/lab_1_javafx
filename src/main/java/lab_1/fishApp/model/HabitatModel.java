@@ -9,6 +9,7 @@ public class HabitatModel {
     private int goldenSpawnTime, guppySpawnTime;
     private int goldenLifeTime,guppyLifeTime;
     private short goldenSpawnChance, guppySpawnChance;
+    private short goldenMaxVelocity, guppyMaxVelocity;
     private static FishData fishData;
 
     public HabitatModel() {
@@ -19,6 +20,8 @@ public class HabitatModel {
         guppyLifeTime = 25;
         goldenSpawnChance = 100;
         guppySpawnChance = 100;
+        goldenMaxVelocity = 10;
+        guppyMaxVelocity = 10;
     }
 
     public void setGoldenSpawnTime(int newTime){
@@ -71,6 +74,11 @@ public class HabitatModel {
         return this.guppySpawnChance;
     }
 
+    public void setGoldenMaxVelocity(short newMaxVelocity) {this.goldenMaxVelocity=newMaxVelocity;}
+    public short getGoldenMaxVelocity() {return this.goldenMaxVelocity;}
+    public void setGuppyMaxVelocity(short newMaxVelocity) {this.guppyMaxVelocity=newMaxVelocity;}
+    public short getGuppyMaxVelocity() {return this.guppyMaxVelocity;}
+
     public FishData getFishData() {
         return this.fishData;
     }
@@ -85,23 +93,25 @@ public class HabitatModel {
 
     public Fish createFish(double xBound, double yBound, int id, int birthTime, Class clazz) throws FileNotFoundException {
         Random randomGenerator = new Random();
-        int x=randomGenerator.nextInt((int)xBound);
-        int y=randomGenerator.nextInt((int)yBound);
+        int x=randomGenerator.nextInt((int)xBound), xVelocity = 1+randomGenerator.nextInt(goldenMaxVelocity);
+        int y=randomGenerator.nextInt((int)yBound), yVelocity = 1+randomGenerator.nextInt(guppyMaxVelocity);
         Fish createdFish = null;
-        if (clazz==GoldenFish.class){
-            GoldenFish goldenFish = new GoldenFish(x,y,id,birthTime);
-            fishData.fishList.add(goldenFish);
-            fishData.idSet.add(id);
-            fishData.birthTimeTree.put(id, birthTime);
-            createdFish = goldenFish;
-        }
-        else if (clazz==GuppyFish.class){
-            GuppyFish guppyFish = new GuppyFish(x,y,id,birthTime);
-            fishData.fishList.add(guppyFish);
-            fishData.idSet.add(id);
-            fishData.birthTimeTree.put(id, birthTime);
-            createdFish = guppyFish;
-        }
+       // synchronized (FishData.getInstance()){
+            if (clazz==GoldenFish.class){
+                GoldenFish goldenFish = new GoldenFish(x,y,xVelocity,yVelocity,id,birthTime);
+                fishData.fishList.add(goldenFish);
+                fishData.idSet.add(id);
+                fishData.birthTimeTree.put(id, birthTime);
+                createdFish = goldenFish;
+            }
+            else if (clazz==GuppyFish.class){
+                GuppyFish guppyFish = new GuppyFish(x,y,xVelocity,yVelocity,id,birthTime);
+                fishData.fishList.add(guppyFish);
+                fishData.idSet.add(id);
+                fishData.birthTimeTree.put(id, birthTime);
+                createdFish = guppyFish;
+            }
+        //}
         return createdFish;
     }
 

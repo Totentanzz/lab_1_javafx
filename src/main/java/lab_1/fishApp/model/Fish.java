@@ -1,5 +1,7 @@
 package lab_1.fishApp.model;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -9,15 +11,16 @@ import java.io.FileNotFoundException;
 public abstract class Fish {
 
     private ImageView imageView;
-    private int xCoord, yCoord;
+    private DoubleProperty xCoord, yCoord;
+    private int xVelocity, yVelocity;
     private int birthTime;
     private int id;
 
     Fish(String imagePath) throws FileNotFoundException {
-        this(0,0,0,0,imagePath);
+        this(0,0,0,0,0,0,imagePath);
     }
 
-    Fish(double x, double y, int id, int birthTime, String imagePath) throws FileNotFoundException {
+    Fish(double x, double y, int xVelocity, int yVelocity, int id, int birthTime, String imagePath) throws FileNotFoundException {
         Image fishImage = new Image(new FileInputStream(imagePath));
         this.imageView = new ImageView(fishImage);
         this.imageView.setPreserveRatio(true);
@@ -26,9 +29,11 @@ public abstract class Fish {
         this.imageView.setFitWidth(90);
         this.imageView.setFitHeight(90);
         this.birthTime=birthTime;
-        this.id = id;
-        this.xCoord= (int) x;
-        this.yCoord= (int) y;
+        this.id=id;
+        this.xCoord=this.imageView.xProperty();;
+        this.yCoord=this.imageView.yProperty();
+        this.xVelocity=xVelocity;
+        this.yVelocity=yVelocity;
     }
 
     Fish(Fish object) {
@@ -37,6 +42,8 @@ public abstract class Fish {
         this.id = object.id;
         this.xCoord = object.xCoord;
         this.yCoord = object.yCoord;
+        this.xVelocity = object.xVelocity;
+        this.yVelocity = object.yVelocity;
     }
 
     public ImageView getImageView(){
@@ -64,19 +71,27 @@ public abstract class Fish {
     }
 
     public int getXCoord() {
-        return this.xCoord;
+        return (int)this.xCoord.get();
     }
 
     public void setXCoord(int newXCoord) {
-        this.xCoord=newXCoord;
+        this.xCoord.set(newXCoord);
     }
 
     public int getYCoord() {
-        return this.yCoord;
+        return (int)this.yCoord.get();
     }
 
-    public void setYcoord(int newYCoord) {
-        this.yCoord=newYCoord;
+    public void setYCoord(int newYCoord) {
+        this.yCoord.set(newYCoord);
     }
+
+    public void setXVelocity(int newXVelocity) {this.xVelocity=newXVelocity;}
+
+    public int getXVelocity() {return this.xVelocity;}
+
+    public void setYVelocity(int newYVelocity) {this.yVelocity=newYVelocity;}
+
+    public int getYVelocity() {return this.yVelocity;}
 
 }

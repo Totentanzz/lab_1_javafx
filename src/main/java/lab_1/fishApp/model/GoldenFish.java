@@ -10,20 +10,12 @@ public class GoldenFish extends Fish implements IBehaviour {
         super(goldenImagePath);
     }
 
-    public GoldenFish(double x, double y, int id, int birthTime) throws FileNotFoundException {
-        super(x,y,id,birthTime,goldenImagePath);
+    public GoldenFish(double x, double y,int xVelocity,int yVelocity, int id, int birthTime) throws FileNotFoundException {
+        super(x,y,xVelocity,yVelocity,id,birthTime,goldenImagePath);
     }
 
     public GoldenFish(GoldenFish object) {
         super(object);
     }
-
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (obj instanceof GoldenFish){
-//            return true;
-//        }
-//        return false;
-//    }
 
 }

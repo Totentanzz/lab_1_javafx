@@ -7,7 +7,8 @@ import java.util.stream.Stream;
 public class FishData {
 
     private static volatile FishData fishData;
-    public LinkedList<Fish> fishList;
+    public volatile LinkedList<Fish> fishList;
+    //public volatile List syncList;
     public HashSet<Integer> idSet;
     public TreeMap<Integer,Integer> birthTimeTree;
 
@@ -15,6 +16,7 @@ public class FishData {
         fishList = new LinkedList<>();
         idSet = new HashSet<>();
         birthTimeTree = new TreeMap<>();
+       // syncList = Collections.synchronizedList(fishList);
     }
     public static FishData getInstance() {
         FishData localFishData = fishData;

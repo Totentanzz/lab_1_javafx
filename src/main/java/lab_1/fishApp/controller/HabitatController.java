@@ -1,8 +1,5 @@
 package lab_1.fishApp.controller;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,11 +16,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import lab_1.fishApp.utils.BaseAI;
 import lab_1.fishApp.utils.UniqueNumberGenerator;
 
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -65,12 +64,16 @@ public class HabitatController implements Initializable {
     private Spinner<Integer> guppySpawnSpinner;
     @FXML
     private Spinner<Integer> guppyLifeSpinner;
+    @FXML
+    private Button but;
     private HabitatModel habitatModel;
     private boolean startFlag;
     private Duration simulationTime;
     private Timer timer;
     private TimerTask simulationTask;
     private UniqueNumberGenerator uniqueNumberGenerator;
+    private GoldenFishAI goldenFishAI;
+    private GuppyFishAI guppyFishAI;
 
     public void setHabitatModel(HabitatModel model){
         this.habitatModel=model;
@@ -114,11 +117,12 @@ public class HabitatController implements Initializable {
         startFlag = true;
         statisticsLabel.setVisible(false);
         timer.schedule(simulationTask,0,1000);
+        Stream.of(goldenFishAI,guppyFishAI).forEach(BaseAI::startAI);
     }
 
     private void stopSimulation() throws FileNotFoundException, InterruptedException {
+        Stream.of(goldenFishAI,guppyFishAI).forEach(BaseAI::pauseAI);
         if (checkBox.isSelected()) {
-            //timer.pause();
             startFlag=false;
             refreshStatisticsLabel();
             ImageView goldView = new GoldenFish().getImageView();
@@ -132,6 +136,7 @@ public class HabitatController implements Initializable {
             }
             else {
                 startFlag=true;
+                Stream.of(goldenFishAI,guppyFishAI).forEach(BaseAI::resumeAI);
             }
         }
         else {
@@ -142,7 +147,9 @@ public class HabitatController implements Initializable {
 
     private void stopAndClear() {
         showLabel(statisticsLabel);
-        habitatModel.getFishData().clearData();
+        synchronized (habitatModel.getFishData()) {
+            habitatModel.getFishData().clearData();
+        }
         startFlag=false;
         simulationTask.cancel();
         initTimerTask();
@@ -168,40 +175,43 @@ public class HabitatController implements Initializable {
         short guppySpawnChance = habitatModel.getGuppySpawnChance();
         Random randomGenerator = new Random();
         int generatedDigit = randomGenerator.nextInt(100);
-        if ((time%goldenSpawnTime==0)&&(generatedDigit<goldenSpawnChance)){
-            Fish createdFish=habitatModel.createFish(xBound, yBound, uniqueNumberGenerator.getNext(),
-                    (int) this.simulationTime.toSeconds(), GoldenFish.class);
-            System.out.println("golden: id: " + createdFish.getId() + " birthTime: " + createdFish.getBirthTime() + " hashcode: " + createdFish.hashCode() + "\n");
-            Platform.runLater(()->imagePane.getChildren().add(createdFish.getImageView()));
-        }
-        if ((time%guppySpawnTime==0)&&(generatedDigit<guppySpawnChance)){
-            Fish createdFish=habitatModel.createFish(xBound,yBound,uniqueNumberGenerator.getNext(),
-                    (int) this.simulationTime.toSeconds(), GuppyFish.class);
-            System.out.println("guppy: id: " + createdFish.getId() + " birthTime: " + createdFish.getBirthTime() + " hashcode: " + createdFish.hashCode() + "\n");
-            Platform.runLater(()->imagePane.getChildren().add(createdFish.getImageView()));
+        synchronized (habitatModel.getFishData().fishList){
+            if ((time%goldenSpawnTime==0)&&(generatedDigit<goldenSpawnChance)){
+                Fish createdFish=habitatModel.createFish(xBound, yBound, uniqueNumberGenerator.getNext(),
+                        (int) this.simulationTime.toSeconds(), GoldenFish.class);
+                Platform.runLater(()->imagePane.getChildren().add(createdFish.getImageView()));
+            }
+            if ((time%guppySpawnTime==0)&&(generatedDigit<guppySpawnChance)){
+                Fish createdFish=habitatModel.createFish(xBound,yBound,uniqueNumberGenerator.getNext(),
+                        (int) this.simulationTime.toSeconds(), GuppyFish.class);
+                Platform.runLater(()->imagePane.getChildren().add(createdFish.getImageView()));
+            }
         }
     }
 
     private void refreshTimeLabel(long time){
         Platform.runLater(()->timeLabel.setText("Simulation time: " + time));
-        System.out.println("Simulation time: " + time);
     }
 
     private void removeDeadFish(long time) {
-        FishData fishData = habitatModel.getFishData();
-        ObservableList<Node> imageViews = imagePane.getChildren();
-        LinkedList<Fish> deadFish = habitatModel.getFishData().fishList.stream().filter(obj -> {
-            int lifeTime = (obj instanceof GoldenFish) ?
-                    habitatModel.getGoldenLifeTime() : habitatModel.getGuppyLifeTime();
-            return (obj.getBirthTime() + lifeTime <= time);
-        }).collect(Collectors.toCollection(LinkedList::new));
-        deadFish.forEach(obj -> {
-            int objId = obj.getId();
-            fishData.idSet.remove(objId);
-            fishData.birthTimeTree.remove(objId);
-            fishData.fishList.remove(obj);
-            Platform.runLater(()->imageViews.remove(obj.getImageView()));
-        });
+        synchronized (habitatModel.getFishData().fishList){
+            FishData fishData = habitatModel.getFishData();
+            ObservableList<Node> imageViews = imagePane.getChildren();
+            LinkedList<Fish> deadFish = habitatModel.getFishData().fishList.stream().filter(obj -> {
+                int lifeTime = (obj instanceof GoldenFish) ?
+                        habitatModel.getGoldenLifeTime() : habitatModel.getGuppyLifeTime();
+                return (obj.getBirthTime() + lifeTime <= time);
+            }).collect(Collectors.toCollection(LinkedList::new));
+            deadFish.forEach(obj -> {
+                int objId = obj.getId();
+                fishData.idSet.remove(objId);
+                fishData.birthTimeTree.remove(objId);
+                // synchronized (habitatModel.getFishData()) {
+                fishData.fishList.remove(obj);
+                //}
+                Platform.runLater(()->imageViews.remove(obj.getImageView()));
+            });
+        }
     }
 
     private void refreshStatisticsLabel() {
@@ -209,19 +219,6 @@ public class HabitatController implements Initializable {
         long guppyAmount = habitatModel.getFishAmount(GuppyFish.class);
         statisticsLabel.setText("Golden fish (pepe-clown): " + goldAmount + "\n" + "Guppy fish (pepe-dancer): " + guppyAmount);
     }
-
-//    private void initTimer(){
-//        timerEvent = new KeyFrame(Duration.seconds(1), timerEvent-> {
-//            simulationTime = simulationTime.add(Duration.seconds(1));
-//            try {
-//                update((long) simulationTime.toSeconds());
-//            } catch (FileNotFoundException e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
-//        timer = new Timeline(timerEvent);
-//        timer.setCycleCount(Animation.INDEFINITE);
-//    }
 
     private void initTimerTask(){
         simulationTask = new TimerTask() {
@@ -250,7 +247,9 @@ public class HabitatController implements Initializable {
             habitatModel.setGuppySpawnTime(newValue);
         });
         guppyLifeSpinner.valueProperty().addListener((observableValue,oldValue,newValue)->{
+            System.out.println(habitatModel.getGuppyLifeTime());
             habitatModel.setGuppyLifeTime(newValue);
+            System.out.println(habitatModel.getGuppyLifeTime());
         });
         Stream.of(goldenSpawnSpinner,goldenLifeSpinner,guppySpawnSpinner,guppyLifeSpinner)
                 .forEach(spinner->spinner.getEditor().setTextFormatter(new TextFormatter<Integer>(
@@ -299,15 +298,17 @@ public class HabitatController implements Initializable {
             }
         });
         objectsButton.setOnAction(actionEvent -> {
-            if (startFlag) {
+          //  if (startFlag) {
                 startFlag=false;
-            }
+                Stream.of(goldenFishAI,guppyFishAI).forEach(BaseAI::pauseAI);
+          //  }
             DialogWindow<ButtonType> window = new DialogWindow<>(DialogWindow.DialogType.OBJECTS);
             window.initOwner(mainStage);
             window.showAndWait();
-            if (!startFlag){
+           // if (!startFlag){
                 startFlag=true;
-            }
+                Stream.of(goldenFishAI,guppyFishAI).forEach(BaseAI::resumeAI);
+          // }
         });
     }
 
@@ -324,6 +325,8 @@ public class HabitatController implements Initializable {
                 Integer::toString).collect(Collectors.toCollection(FXCollections::observableArrayList));
         Stream.of(goldenBox,guppyBox).peek(box->box.setItems(boxChoices)).forEach(box->
                 box.getSelectionModel().select(10));
+        goldenFishAI = new GoldenFishAI((int)imagePane.getPrefWidth(),(int)imagePane.getPrefHeight());
+        guppyFishAI = new GuppyFishAI((int)imagePane.getPrefWidth(),(int)imagePane.getPrefHeight());
     }
 
 }
