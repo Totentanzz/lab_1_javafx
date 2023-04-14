@@ -64,8 +64,6 @@ public class HabitatController implements Initializable {
     private Spinner<Integer> guppySpawnSpinner;
     @FXML
     private Spinner<Integer> guppyLifeSpinner;
-    @FXML
-    private Button but;
     private HabitatModel habitatModel;
     private boolean startFlag;
     private Duration simulationTime;
