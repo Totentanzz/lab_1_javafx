@@ -18,4 +18,12 @@ public class GoldenFish extends Fish implements IBehaviour {
         super(object);
     }
 
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (obj instanceof GoldenFish){
+//            return true;
+//        }
+//        return false;
+//    }
+
 }
