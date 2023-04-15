@@ -1,5 +1,6 @@
 package lab_1.fishApp.utils;
 
+import javafx.application.Platform;
 import lab_1.fishApp.model.Fish;
 import lab_1.fishApp.model.FishData;
 import lab_1.fishApp.model.GoldenFish;
@@ -18,8 +19,7 @@ public abstract class BaseAI {
     private final Object locker;
     private boolean stopFlag;
     private Thread moveThread;
-    private volatile LinkedList objectList;
-   // private List objectList;
+    private LinkedList<Fish> objectList;
     protected Predicate filter;
     protected Consumer mover;
     protected int xBound, yBound, movesPerSecond;
@@ -56,7 +56,7 @@ public abstract class BaseAI {
                         }
                     }
                 }
-                synchronized (objectList) {
+                synchronized (FishData.getInstance().fishList) {
                     if (!objectList.isEmpty()) {
                        objectList.stream().filter(filter).forEach(mover);
                     }
@@ -82,11 +82,8 @@ public abstract class BaseAI {
     }
 
     public void pauseAI() {
-        //synchronized (lock){
         System.out.println("PAUSED");
         stopFlag = true;
-        //    lock.notifyAll();
-        // }
     }
 
     public void resumeAI() {

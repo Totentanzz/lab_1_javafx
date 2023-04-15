@@ -1,5 +1,6 @@
 package lab_1.fishApp.model;
 
+import javafx.application.Platform;
 import lab_1.fishApp.utils.BaseAI;
 
 public class GuppyFishAI extends BaseAI {
@@ -27,7 +28,7 @@ public class GuppyFishAI extends BaseAI {
                 fish.setYVelocity(-fish.getYVelocity());
             }
             int newFishYCoord = curFishYCoord + fish.getYVelocity();
-            fish.setYCoord(newFishYCoord);
+            Platform.runLater(()->fish.setYCoord(newFishYCoord));
         };
     }
 }

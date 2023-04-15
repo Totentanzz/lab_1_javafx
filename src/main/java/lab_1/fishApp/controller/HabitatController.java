@@ -41,6 +41,10 @@ public class HabitatController implements Initializable {
     @FXML
     private CheckBox checkBox;
     @FXML
+    private CheckBox goldenFishThreadBox;
+    @FXML
+    private CheckBox guppyFishThreadBox;
+    @FXML
     private ToggleGroup timeToggleGroup;
     @FXML
     private ComboBox<String> goldenBox;
@@ -115,7 +119,11 @@ public class HabitatController implements Initializable {
         startFlag = true;
         statisticsLabel.setVisible(false);
         timer.schedule(simulationTask,0,1000);
-        Stream.of(goldenFishAI,guppyFishAI).forEach(BaseAI::startAI);
+        Stream.of(goldenFishAI,guppyFishAI).forEach(ai->{
+            ai.startAI();
+            ai.pauseAI();
+        });
+        checkBoxesAndAI();
     }
 
     private void stopSimulation() throws FileNotFoundException, InterruptedException {
@@ -134,7 +142,7 @@ public class HabitatController implements Initializable {
             }
             else {
                 startFlag=true;
-                Stream.of(goldenFishAI,guppyFishAI).forEach(BaseAI::resumeAI);
+                checkBoxesAndAI();
             }
         }
         else {
@@ -192,7 +200,6 @@ public class HabitatController implements Initializable {
     }
 
     private void removeDeadFish(long time) {
-        synchronized (habitatModel.getFishData().fishList){
             FishData fishData = habitatModel.getFishData();
             ObservableList<Node> imageViews = imagePane.getChildren();
             LinkedList<Fish> deadFish = habitatModel.getFishData().fishList.stream().filter(obj -> {
@@ -204,12 +211,11 @@ public class HabitatController implements Initializable {
                 int objId = obj.getId();
                 fishData.idSet.remove(objId);
                 fishData.birthTimeTree.remove(objId);
-                // synchronized (habitatModel.getFishData()) {
-                fishData.fishList.remove(obj);
-                //}
+                synchronized (habitatModel.getFishData().fishList) {
+                    fishData.fishList.remove(obj);
+                }
                 Platform.runLater(()->imageViews.remove(obj.getImageView()));
             });
-        }
     }
 
     private void refreshStatisticsLabel() {
@@ -276,6 +282,23 @@ public class HabitatController implements Initializable {
         });
     }
 
+    private void initCheckBoxes() {
+        goldenFishThreadBox.setOnAction(action -> {
+            if (goldenFishThreadBox.isSelected()) goldenFishAI.resumeAI();
+            else goldenFishAI.pauseAI();
+        });
+        guppyFishThreadBox.setOnAction(action -> {
+            if (guppyFishThreadBox.isSelected()) guppyFishAI.resumeAI();
+            else guppyFishAI.pauseAI();
+        });
+        Stream.of(goldenFishThreadBox,guppyFishThreadBox).forEach(obj->obj.setSelected(true));
+    }
+
+    private void checkBoxesAndAI() {
+        if (goldenFishThreadBox.isSelected()) goldenFishAI.resumeAI();
+        if (guppyFishThreadBox.isSelected()) guppyFishAI.resumeAI();
+    }
+
     private void initStartButtons() {
         startButton.setOnAction(actionEvent -> {
             startSimulation();
@@ -296,17 +319,13 @@ public class HabitatController implements Initializable {
             }
         });
         objectsButton.setOnAction(actionEvent -> {
-          //  if (startFlag) {
-                startFlag=false;
-                Stream.of(goldenFishAI,guppyFishAI).forEach(BaseAI::pauseAI);
-          //  }
+            startFlag=false;
+            Stream.of(goldenFishAI,guppyFishAI).forEach(BaseAI::pauseAI);
             DialogWindow<ButtonType> window = new DialogWindow<>(DialogWindow.DialogType.OBJECTS);
             window.initOwner(mainStage);
             window.showAndWait();
-           // if (!startFlag){
-                startFlag=true;
-                Stream.of(goldenFishAI,guppyFishAI).forEach(BaseAI::resumeAI);
-          // }
+            startFlag=true;
+            checkBoxesAndAI();
         });
     }
 
@@ -318,6 +337,7 @@ public class HabitatController implements Initializable {
         initTimerTask();
         initSpinners();
         initRadioButtons();
+        initCheckBoxes();
         initStartButtons();
         ObservableList<String> boxChoices = IntStream.rangeClosed(0,100).filter(i->i%10==0).mapToObj(
                 Integer::toString).collect(Collectors.toCollection(FXCollections::observableArrayList));

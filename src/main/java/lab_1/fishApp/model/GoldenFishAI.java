@@ -1,6 +1,9 @@
 package lab_1.fishApp.model;
 
+import javafx.application.Platform;
 import lab_1.fishApp.utils.BaseAI;
+
+import java.util.function.Consumer;
 
 public class GoldenFishAI extends BaseAI {
 
@@ -28,7 +31,7 @@ public class GoldenFishAI extends BaseAI {
                 fish.setXVelocity(-fish.getXVelocity());
             }
             int newFishXCoord = curFishXCoord + fish.getXVelocity();
-            fish.setXCoord(newFishXCoord);
+            Platform.runLater(()->fish.setXCoord(newFishXCoord));
         };
     }
 }

@@ -96,7 +96,6 @@ public class HabitatModel {
         int x=randomGenerator.nextInt((int)xBound), xVelocity = 1+randomGenerator.nextInt(goldenMaxVelocity);
         int y=randomGenerator.nextInt((int)yBound), yVelocity = 1+randomGenerator.nextInt(guppyMaxVelocity);
         Fish createdFish = null;
-       // synchronized (FishData.getInstance()){
             if (clazz==GoldenFish.class){
                 GoldenFish goldenFish = new GoldenFish(x,y,xVelocity,yVelocity,id,birthTime);
                 fishData.fishList.add(goldenFish);
@@ -111,7 +110,6 @@ public class HabitatModel {
                 fishData.birthTimeTree.put(id, birthTime);
                 createdFish = guppyFish;
             }
-        //}
         return createdFish;
     }
 

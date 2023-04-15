@@ -7,7 +7,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.stage.*?>
 
-<Stage fx:id="mainStage" height="910.0" minHeight="910.0" minWidth="1600.0" onCloseRequest="#handleCloseRequest" width="1600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lab_1.fishApp.controller.HabitatController">
+<Stage fx:id="mainStage" height="910.0" minHeight="910.0" minWidth="1600.0" onCloseRequest="#handleCloseRequest" width="1600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lab_1.fishApp.controller.HabitatController">
    <scene>
       <Scene fx:id="mainScene" onKeyPressed="#setActionOnKey">
          <root>
@@ -20,120 +20,142 @@
                         </font>
                      </Label>
                      <Separator layoutY="72.0" prefHeight="14.0" prefWidth="521.0" AnchorPane.bottomAnchor="755.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0" />
-                     <AnchorPane layoutY="79.0" prefHeight="267.0" prefWidth="521.0" AnchorPane.bottomAnchor="495.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="79.0">
+                     <AnchorPane layoutY="79.0" prefHeight="412.0" prefWidth="657.0" AnchorPane.bottomAnchor="376.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="79.0">
                         <children>
-                           <HBox alignment="CENTER" prefHeight="53.0" prefWidth="521.0" spacing="10.0" AnchorPane.bottomAnchor="216.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <VBox prefHeight="410.0" prefWidth="657.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                               <children>
-                                 <Label focusTraversable="false" text="Golden fish:" textFill="#a972cb">
-                                    <font>
-                                       <Font name="Verdana Bold" size="11.0" />
-                                    </font>
-                                 </Label>
-                                 <Label focusTraversable="false" text="Spawn chacne (%)" textFill="#a972cb">
-                                    <font>
-                                       <Font name="Verdana Bold" size="11.0" />
-                                    </font>
-                                 </Label>
-                                 <ComboBox fx:id="goldenBox" onAction="#setGoldenChance" prefHeight="25.0" prefWidth="74.0" />
-                                 <Label focusTraversable="false" text="Spawn rate (s)" textFill="#a972cb">
-                                    <font>
-                                       <Font name="Verdana Bold" size="11.0" />
-                                    </font>
-                                 </Label>
-                                 <Spinner fx:id="goldenSpawnSpinner" amountToStepBy="1" editable="true" initialValue="3" max="1000" min="1" prefHeight="25.0" prefWidth="69.0" />
-                                 <Label text="Life time (s)" textFill="#a972cb">
-                                    <font>
-                                       <Font name="Verdana Bold" size="11.0" />
-                                    </font></Label>
-                                 <Spinner fx:id="goldenLifeSpinner" amountToStepBy="1" editable="true" initialValue="15" max="1000" min="1" prefHeight="25.0" prefWidth="79.0" />
+                                 <HBox alignment="CENTER" prefHeight="53.0" prefWidth="521.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                       <Label focusTraversable="false" text="Golden fish:" textFill="#a972cb">
+                                          <font>
+                                             <Font name="Verdana Bold" size="11.0" />
+                                          </font>
+                                       </Label>
+                                       <Label focusTraversable="false" text="Spawn chacne (%)" textFill="#a972cb">
+                                          <font>
+                                             <Font name="Verdana Bold" size="11.0" />
+                                          </font>
+                                       </Label>
+                                       <ComboBox fx:id="goldenBox" onAction="#setGoldenChance" prefHeight="25.0" prefWidth="74.0" />
+                                       <Label focusTraversable="false" text="Spawn rate (s)" textFill="#a972cb">
+                                          <font>
+                                             <Font name="Verdana Bold" size="11.0" />
+                                          </font>
+                                       </Label>
+                                       <Spinner fx:id="goldenSpawnSpinner" amountToStepBy="1" editable="true" initialValue="3" max="1000" min="1" prefHeight="25.0" prefWidth="69.0" />
+                                       <Label text="Life time (s)" textFill="#a972cb">
+                                          <font>
+                                             <Font name="Verdana Bold" size="11.0" />
+                                          </font>
+                                       </Label>
+                                       <Spinner fx:id="goldenLifeSpinner" amountToStepBy="1" editable="true" initialValue="15" max="1000" min="1" prefHeight="25.0" prefWidth="79.0" />
+                                    </children>
+                                 </HBox>
+                                 <HBox alignment="CENTER" prefHeight="32.0" prefWidth="521.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                       <Label focusTraversable="false" text="Guppy fish:" textFill="#a972cb">
+                                          <font>
+                                             <Font name="Verdana Bold" size="11.0" />
+                                          </font>
+                                       </Label>
+                                       <Label focusTraversable="false" text="Spawn chacne (%)" textFill="#a972cb">
+                                          <font>
+                                             <Font name="Verdana Bold" size="11.0" />
+                                          </font>
+                                       </Label>
+                                       <ComboBox fx:id="guppyBox" onAction="#setGuppyChance" prefHeight="25.0" prefWidth="74.0" />
+                                       <Label focusTraversable="false" text="Spawn rate (s)" textFill="#a972cb">
+                                          <font>
+                                             <Font name="Verdana Bold" size="11.0" />
+                                          </font>
+                                       </Label>
+                                       <Spinner fx:id="guppySpawnSpinner" amountToStepBy="1" editable="true" initialValue="5" max="1000" min="1" prefHeight="25.0" prefWidth="69.0" />
+                                       <Label text="Life time (s)" textFill="#a972cb">
+                                          <font>
+                                             <Font name="Verdana Bold" size="11.0" />
+                                          </font>
+                                       </Label>
+                                       <Spinner fx:id="guppyLifeSpinner" amountToStepBy="1" editable="true" initialValue="25" max="1000" min="1" prefHeight="25.0" prefWidth="79.0" />
+                                    </children>
+                                 </HBox>
+                                 <HBox alignment="CENTER" focusTraversable="true" prefHeight="38.0" prefWidth="521.0" spacing="30.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                       <RadioButton mnemonicParsing="false" text="Show time" textFill="#a972cb">
+                                          <font>
+                                             <Font name="Verdana Bold" size="13.0" />
+                                          </font>
+                                          <toggleGroup>
+                                             <ToggleGroup fx:id="timeToggleGroup" />
+                                          </toggleGroup>
+                                       </RadioButton>
+                                       <RadioButton mnemonicParsing="false" text="Hide time" textFill="#a972cb" toggleGroup="$timeToggleGroup">
+                                          <font>
+                                             <Font name="Verdana Bold" size="13.0" />
+                                          </font>
+                                       </RadioButton>
+                                       <CheckBox fx:id="checkBox" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" selected="true" text="Show information" textFill="#a972cb">
+                                          <font>
+                                             <Font name="Verdana Bold" size="13.0" />
+                                          </font>
+                                       </CheckBox>
+                                    </children>
+                                    <padding>
+                                       <Insets left="20.0" />
+                                    </padding>
+                                 </HBox>
+                                 <HBox alignment="CENTER" prefHeight="32.0" prefWidth="657.0" spacing="30.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                       <CheckBox fx:id="goldenFishThreadBox" mnemonicParsing="false" text="GoldenFishAI" textFill="#a972cb">
+                                          <font>
+                                             <Font name="Verdana Bold" size="13.0" />
+                                          </font>
+                                       </CheckBox>
+                                       <CheckBox fx:id="guppyFishThreadBox" mnemonicParsing="false" text="GuppyFishAI" textFill="#a972cb">
+                                          <font>
+                                             <Font name="Verdana Bold" size="13.0" />
+                                          </font>
+                                       </CheckBox>
+                                    </children>
+                                    <padding>
+                                       <Insets left="20.0" />
+                                    </padding>
+                                 </HBox>
+                                 <HBox alignment="CENTER" focusTraversable="true" prefHeight="103.0" prefWidth="657.0" spacing="30.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                       <Button fx:id="startButton" mnemonicParsing="false" prefHeight="57.0" prefWidth="107.0" style="-fx-background-color: #333333; -fx-border-color: #8fc866; -fx-border-width: 4; -fx-text-fill: #8fc866" text="START" textFill="#8fc866">
+                                          <font>
+                                             <Font name="System Bold" size="12.0" />
+                                          </font>
+                                       </Button>
+                                       <Button fx:id="stopButton" disable="true" mnemonicParsing="false" prefHeight="57.0" prefWidth="107.0" style="-fx-background-color: #333333; -fx-border-color: #ff7f82; -fx-border-width: 4;" text="STOP" textFill="#ff7f82">
+                                          <font>
+                                             <Font name="System Bold" size="12.0" />
+                                          </font>
+                                       </Button>
+                                       <Button fx:id="objectsButton" mnemonicParsing="false" prefHeight="57.0" prefWidth="107.0" style="-fx-background-color: #333333; -fx-border-color: #00b2ff; -fx-border-width: 4;" text="OBJECTS" textFill="#00b2ff">
+                                          <font>
+                                             <Font name="System Bold" size="12.0" />
+                                          </font>
+                                       </Button>
+                                    </children>
+                                 </HBox>
                               </children>
-                           </HBox>
-                           <HBox alignment="CENTER" layoutY="57.0" prefHeight="32.0" prefWidth="521.0" spacing="10.0" AnchorPane.bottomAnchor="163.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="57.0">
-                              <children>
-                                 <Label focusTraversable="false" text="Guppy fish:" textFill="#a972cb">
-                                    <font>
-                                       <Font name="Verdana Bold" size="11.0" />
-                                    </font>
-                                 </Label>
-                                 <Label focusTraversable="false" text="Spawn chacne (%)" textFill="#a972cb">
-                                    <font>
-                                       <Font name="Verdana Bold" size="11.0" />
-                                    </font>
-                                 </Label>
-                                 <ComboBox fx:id="guppyBox" onAction="#setGuppyChance" prefHeight="25.0" prefWidth="74.0" />
-                                 <Label focusTraversable="false" text="Spawn rate (s)" textFill="#a972cb">
-                                    <font>
-                                       <Font name="Verdana Bold" size="11.0" />
-                                    </font>
-                                 </Label>
-                                 <Spinner fx:id="guppySpawnSpinner" amountToStepBy="1" editable="true" initialValue="5" max="1000" min="1" prefHeight="25.0" prefWidth="69.0" />
-                                 <Label text="Life time (s)" textFill="#a972cb">
-                                    <font>
-                                       <Font name="Verdana Bold" size="11.0" />
-                                    </font>
-                                 </Label>
-                                 <Spinner fx:id="guppyLifeSpinner" amountToStepBy="1" editable="true" initialValue="25" max="1000" min="1" prefHeight="25.0" prefWidth="79.0" />
-                              </children>
-                           </HBox>
-                           <HBox accessibleRole="TOOL_BAR" alignment="CENTER" focusTraversable="true" layoutY="104.0" prefHeight="38.0" prefWidth="521.0" spacing="30.0" AnchorPane.bottomAnchor="111.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="104.0">
-                              <children>
-                                 <RadioButton mnemonicParsing="false" text="Show time" textFill="#a972cb">
-                                    <font>
-                                       <Font name="Verdana Bold" size="13.0" />
-                                    </font>
-                                    <toggleGroup>
-                                       <ToggleGroup fx:id="timeToggleGroup" />
-                                    </toggleGroup>
-                                 </RadioButton>
-                                 <RadioButton mnemonicParsing="false" text="Hide time" textFill="#a972cb" toggleGroup="$timeToggleGroup">
-                                    <font>
-                                       <Font name="Verdana Bold" size="13.0" />
-                                    </font>
-                                 </RadioButton>
-                                 <CheckBox fx:id="checkBox" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" selected="true" text="Show information" textFill="#a972cb">
-                                    <font>
-                                       <Font name="Verdana Bold" size="13.0" />
-                                    </font>
-                                 </CheckBox>
-                              </children>
-                              <padding>
-                                 <Insets left="20.0" />
-                              </padding>
-                           </HBox>
-                           <HBox alignment="CENTER" focusTraversable="true" layoutY="174.0" prefHeight="97.0" prefWidth="561.0" spacing="30.0" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="174.0">
-                              <children>
-                                 <Button fx:id="startButton" mnemonicParsing="false" prefHeight="57.0" prefWidth="107.0" style="-fx-background-color: #333333; -fx-border-color: #8fc866; -fx-border-width: 4; -fx-text-fill: #8fc866" text="START" textFill="#8fc866">
-                                    <font>
-                                       <Font name="System Bold" size="12.0" />
-                                    </font>
-                                 </Button>
-                                 <Button fx:id="stopButton" disable="true" mnemonicParsing="false" prefHeight="57.0" prefWidth="107.0" style="-fx-background-color: #333333; -fx-border-color: #ff7f82; -fx-border-width: 4;" text="STOP" textFill="#ff7f82">
-                                    <font>
-                                       <Font name="System Bold" size="12.0" />
-                                    </font>
-                                 </Button>
-                                 <Button fx:id="objectsButton" mnemonicParsing="false" prefHeight="57.0" prefWidth="107.0" style="-fx-background-color: #333333; -fx-border-color: #00b2ff; -fx-border-width: 4;" text="OBJECTS" textFill="#00b2ff">
-                                    <font>
-                                       <Font name="System Bold" size="12.0" />
-                                    </font>
-                                 </Button>
-                              </children>
-                           </HBox>
+                           </VBox>
                         </children>
                      </AnchorPane>
-                     <Separator layoutX="-177.0" layoutY="346.0" prefHeight="14.0" prefWidth="521.0" AnchorPane.bottomAnchor="481.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="346.0" />
-                     <Label alignment="CENTER" layoutY="353.0" prefHeight="171.0" prefWidth="521.0" text="INFORMATION&#10;AND&#10;STATISTICS&#10;" textAlignment="CENTER" textFill="#e4cb58" AnchorPane.bottomAnchor="317.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="353.0">
+                     <Separator layoutY="469.0" prefHeight="14.0" prefWidth="521.0" AnchorPane.bottomAnchor="358.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="469.0" />
+                     <Label alignment="CENTER" layoutY="489.0" prefHeight="171.0" prefWidth="521.0" text="INFORMATION&#10;AND&#10;STATISTICS&#10;" textAlignment="CENTER" textFill="#e4cb58" AnchorPane.bottomAnchor="181.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="489.0">
                         <font>
                            <Font name="System Bold" size="40.0" />
                         </font>
                      </Label>
-                     <Separator layoutY="520.0" prefHeight="9.0" prefWidth="521.0" AnchorPane.bottomAnchor="312.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="520.0" />
-                      <Label fx:id="timeLabel" alignment="TOP_LEFT" layoutX="6.0" layoutY="553.0" prefHeight="28.0" prefWidth="329.0" text="Simulation time: " textFill="#51a3b8" AnchorPane.bottomAnchor="292.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="226.0" AnchorPane.topAnchor="553.0">
+                     <Separator layoutY="668.0" prefHeight="9.0" prefWidth="521.0" AnchorPane.bottomAnchor="164.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="668.0" />
+                      <Label fx:id="timeLabel" alignment="TOP_LEFT" layoutX="6.0" layoutY="710.0" prefHeight="28.0" prefWidth="329.0" text="Simulation time: " textFill="#51a3b8" AnchorPane.bottomAnchor="135.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="226.0" AnchorPane.topAnchor="710.0">
                         <font>
                            <Font name="Sitka Small Bold Italic" size="18.0" />
                         </font>
                       </Label>
-                      <Label fx:id="statisticsLabel" alignment="TOP_LEFT" layoutX="6.0" layoutY="613.0" prefHeight="65.0" prefWidth="372.0" text="Information:" textFill="#5e87e1" AnchorPane.bottomAnchor="195.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="183.0" AnchorPane.topAnchor="613.0">
+                      <Label fx:id="statisticsLabel" alignment="TOP_LEFT" layoutX="6.0" layoutY="766.0" prefHeight="65.0" prefWidth="372.0" text="Information:" textFill="#5e87e1" AnchorPane.bottomAnchor="42.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="183.0" AnchorPane.topAnchor="766.0">
                         <font>
                            <Font name="Sitka Small Bold Italic" size="18.0" />
                         </font>
