@@ -164,7 +164,6 @@ public class HabitatController implements Initializable {
     private void showLabel (Label label) {
         boolean isLabelVisible = label.isVisible();
         label.setVisible(!isLabelVisible);
-        System.out.println(label.getText());
     }
 
     private void update(long time) throws FileNotFoundException {
@@ -280,6 +279,7 @@ public class HabitatController implements Initializable {
         toggles.get(1).selectedProperty().addListener(observable -> {
             timeLabel.setVisible(false);
         });
+        toggles.get(0).setSelected(true);
     }
 
     private void initCheckBoxes() {

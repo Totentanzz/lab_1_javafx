@@ -49,7 +49,6 @@ public abstract class BaseAI {
                 synchronized (locker) {
                     while (stopFlag) {
                         try {
-                            System.out.println("Clicked to wait " + Thread.currentThread());
                             locker.wait();
                         } catch (InterruptedException e){
                             Thread.currentThread().interrupt();
@@ -82,7 +81,6 @@ public abstract class BaseAI {
     }
 
     public void pauseAI() {
-        System.out.println("PAUSED");
         stopFlag = true;
     }
 
