@@ -267,7 +267,7 @@ public class HabitatController implements Initializable {
             ImageView guppyView = new GuppyFish().getImageView();
             System.out.println(statisticsLabel.getText());
             DialogWindow<ButtonType> window = new DialogWindow<>(DialogWindow.DialogType.STATISTICS,
-                    statisticsLabel.getText(), goldView, guppyView);
+                    statisticsLabel.getText(), goldView, guppyView,null);
             window.initOwner(mainStage);
             if (window.showAndWait().get() == ButtonType.OK) {
                 stopAndClear();
