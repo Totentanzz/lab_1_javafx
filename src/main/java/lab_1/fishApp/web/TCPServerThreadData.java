@@ -1,6 +1,7 @@
 package lab_1.fishApp.web;
 
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 public class TCPServerThreadData implements Updateable  {
 
@@ -50,6 +51,13 @@ public class TCPServerThreadData implements Updateable  {
         this.clientNameList.remove(clientName);
         this.setUpdated();
         System.out.println(this.serverThreadList);
+    }
+
+    public synchronized TCPSingleServerThread getServerThread(String clientName) {
+        TCPSingleServerThread targetThread = serverThreadData.getServerThreadList().stream()
+                .filter(serverThread -> serverThread.getClientName().equals(clientName))
+                .collect(Collectors.toList()).get(0);
+        return targetThread;
     }
 
     public boolean isUpdated() {

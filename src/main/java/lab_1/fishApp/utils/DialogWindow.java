@@ -1,4 +1,4 @@
-package lab_1.fishApp;
+package lab_1.fishApp.utils;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -15,6 +15,7 @@ import lab_1.fishApp.model.Fish;
 import lab_1.fishApp.model.ModelData;
 import lab_1.fishApp.model.GoldenFish;
 import lab_1.fishApp.model.GuppyFish;
+import lab_1.fishApp.web.Client;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,10 +26,14 @@ public class DialogWindow<T> extends Dialog<T> {
     private Text text;
 
     public DialogWindow(DialogType dialogType) {
-        this(dialogType,"",new ImageView(),new ImageView());
+        this(dialogType,"",new ImageView(),new ImageView(),null);
     }
 
-    public DialogWindow(DialogType dialogType, String contentText, ImageView firstView, ImageView secondView){
+    public DialogWindow(DialogType dialogType, Client client) {
+        this(dialogType,"",new ImageView(),new ImageView(),client);
+    }
+
+    public DialogWindow(DialogType dialogType, String contentText, ImageView firstView, ImageView secondView, Client client){
         DialogPane dialogPane = this.getDialogPane();
         dialogPane.setPrefWidth(600);
         dialogPane.setPrefHeight(300);
@@ -84,6 +89,24 @@ public class DialogWindow<T> extends Dialog<T> {
                 this.initModality(Modality.WINDOW_MODAL);
                 this.setTitle("Table of objects");
                 break;
+            case CLIENTS:
+                ObservableList<String> clientList = FXCollections.observableList(ModelData.getInstance().getClientsNames());
+                TableView<String> clientTable = new TableView<>(clientList);
+                TableColumn<String,String> clientNamecolumn = new TableColumn<>("Client name");
+                clientNamecolumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue()));
+                clientTable.getColumns().addAll(clientNamecolumn);
+                clientTable.setRowFactory(callback -> {
+                    TableRow<String> row = new TableRow<>();
+                    row.setOnMouseClicked(event -> {
+                        client.requestConfig(row.getItem());
+                    });
+                    return row;
+                });
+                dialogPane.setContent(clientTable);
+                dialogPane.getButtonTypes().addAll(ButtonType.CLOSE);
+                this.initModality(Modality.WINDOW_MODAL);
+                this.setTitle("List of clients");
+                break;
             case CONSOLE:
                 TextArea consoleField = new TextArea();
                 consoleField.setStyle("-fx-background-color: transparent; -fx-text-fill: white; " +
@@ -97,6 +120,7 @@ public class DialogWindow<T> extends Dialog<T> {
     public static enum DialogType {
         STATISTICS,
         OBJECTS,
+        CLIENTS,
         CONSOLE;
         private DialogType(){
 

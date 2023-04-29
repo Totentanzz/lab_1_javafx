@@ -2,8 +2,6 @@ package lab_1.fishApp.controller;
 
 import com.typesafe.config.*;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,7 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import lab_1.fishApp.DialogWindow;
+import lab_1.fishApp.utils.DialogWindow;
 import lab_1.fishApp.model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,6 +35,9 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class HabitatController implements Initializable {
+
+    @FXML
+    public Button clientsButton;
     @FXML
     private Label clientsLabel;
     @FXML
@@ -527,8 +528,10 @@ public class HabitatController implements Initializable {
             @Override
             public void handleClientListChanges() {
                 if (client.isUpdated()) {
+                    LinkedList<String> newClientNames = client.getClientNames();
+                    ModelData.getInstance().setClientsNames(newClientNames);
                     Platform.runLater(() -> {
-                        clientsLabel.setText(String.join(", ",client.getClientNames()));
+                        clientsLabel.setText(String.join(", ",newClientNames));
                     });
                 }
                 client.setToDefaultState();

@@ -13,12 +13,14 @@ public class ModelData {
     private HashSet<Integer> idSet;
     private TreeMap<Integer,Integer> birthTimeTree;
     private Config configFile;
+    private LinkedList<String> clientsNames;
 
     private ModelData(){
         fishList = new LinkedList<>();
         idSet = new HashSet<>();
         birthTimeTree = new TreeMap<>();
         configFile = ConfigFactory.empty();
+        clientsNames = new LinkedList<>();
     }
     public static ModelData getInstance() {
         ModelData localModelData = modelData;
@@ -64,6 +66,15 @@ public class ModelData {
 
     public TreeMap<Integer,Integer> getBirthTimeTree() {
         return this.birthTimeTree;
+    }
+
+    public LinkedList<String> getClientsNames() {
+        return clientsNames;
+    }
+
+    public void setClientsNames(LinkedList<String> newClientNames) {
+        this.clientsNames.clear();
+        this.clientsNames.addAll(newClientNames);
     }
 
 }

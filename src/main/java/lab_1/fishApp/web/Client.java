@@ -11,12 +11,12 @@ import java.util.LinkedList;
 
 public class Client implements ClientListListener, Updateable {
 
-    private Socket clientSocket;
-    private ObjectOutputStream objectOutStream;
-    private ObjectInputStream objectInStream;
+    private  Socket clientSocket;
+    private  ObjectOutputStream objectOutStream;
+    private  ObjectInputStream objectInStream;
     private static ClientServerListener clientListListener;
     private static LinkedList<String> clientNames;
-    private static boolean updatedFlag;
+    private boolean updatedFlag;
 
     public void startConnection(Config serverConfig) {
         System.out.println("Connection is starting...");

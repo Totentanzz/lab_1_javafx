@@ -46,16 +46,19 @@ public class TCPSingleServerThread extends Thread {
                 ClientDTO readedObject = (ClientDTO) objectInStream.readObject();
                 System.out.println("Received DTO from client: " + hostAddress);
 
-                if (readedObject.getDtoObject().equals(ClientDTO.dtoObject.OBJECTS)){
-                    objectOutStream.writeObject(null);
-                    objectOutStream.flush();
+                if (readedObject.getDtoType().equals(ClientDTO.dtoType.CLIENT_REQUEST) &&
+                         readedObject.getDtoObject().equals(ClientDTO.dtoObject.CONFIG)) {
+                    String targetClientName = readedObject.getClientName();
+                    TCPSingleServerThread targetThread = serverThreadData.getServerThread(targetClientName);
+                    ClientDTO dtoObject = ClientDTO.builder()
+                            .dtoType(ClientDTO.dtoType.SERVER_REQUEST)
+                            .dtoObject(ClientDTO.dtoObject.CONFIG)
+                            .clientName(targetClientName).build();
+                    targetThread.sendDtoObject(dtoObject);
                 }
-                else if (readedObject.getDtoObject().equals(ClientDTO.dtoObject.CONFIG)) {
-                    objectOutStream.writeObject(null);
-                    objectOutStream.flush();
-                }
+                else if (readedObject.getDtoType().equals(ClientDTO.dtoType.SERVER_REQUEST) && readedObject.getDtoObject().equals(ClientDTO.dtoObject.CONFIG))
 
-                System.out.println("Server Wrote message to client " + hostAddress + "\n\n");
+                System.out.println("Server Wrote message to client\n\n");
             }
 
         } catch (EOFException e) {
@@ -93,6 +96,15 @@ public class TCPSingleServerThread extends Thread {
             clientName = matcher.group();
         }
         return clientName;
+    }
+
+    public void sendDtoObject(ClientDTO clientDTO) {
+        try {
+            this.objectOutStream.writeObject(clientDTO);
+            this.objectOutStream.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void sendConnectedClients(LinkedList<String> clientNameList) {

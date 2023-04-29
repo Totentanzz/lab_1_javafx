@@ -137,6 +137,10 @@
                                              <Font name="System Bold" size="12.0" />
                                           </font>
                                        </Button>
+                                       <Button fx:id="clientsButton" mnemonicParsing="false" prefHeight="57.0" prefWidth="107.0" style="-fx-background-color: #333333; -fx-border-color: #ff00c6; -fx-border-width: 4;" text="CLIENTS" textFill="#ff00c6">
+                                          <font>
+                                             <Font name="System Bold" size="12.0" />
+                                          </font></Button>
                                     </children>
                                  </HBox>
                               </children>

@@ -30,6 +30,8 @@ public class ClientDTO implements Serializable {
 
     public enum dtoType {
         CLIENT_REQUEST,
+        CLIENT_REPLY,
+        SERVER_REQUEST,
         SERVER_REPLY;
     }
 
