@@ -2,26 +2,20 @@ package lab_1.fishApp;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import lab_1.fishApp.model.Fish;
-import lab_1.fishApp.model.FishData;
+import lab_1.fishApp.model.ModelData;
 import lab_1.fishApp.model.GoldenFish;
 import lab_1.fishApp.model.GuppyFish;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,7 +50,7 @@ public class DialogWindow<T> extends Dialog<T> {
                 this.setTitle("Statistics window");
                 break;
             case OBJECTS:
-                ObservableList<Fish> fishList = FXCollections.observableList(FishData.getInstance().fishList)
+                ObservableList<Fish> fishList = FXCollections.observableList(ModelData.getInstance().getFishList())
                         .stream().map(obj -> {
                             if (obj instanceof GoldenFish) {
                                 GoldenFish newFish = new GoldenFish((GoldenFish) obj);

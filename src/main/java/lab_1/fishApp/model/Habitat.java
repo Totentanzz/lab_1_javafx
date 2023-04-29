@@ -1,19 +1,25 @@
 package lab_1.fishApp.model;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigValueFactory;
+
 import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 
-public class HabitatModel {
+public class Habitat {
 
     private int goldenSpawnTime, guppySpawnTime;
     private int goldenLifeTime,guppyLifeTime;
     private short goldenSpawnChance, guppySpawnChance;
     private short goldenMaxVelocity, guppyMaxVelocity;
-    private static FishData fishData;
+    private static ModelData modelData;
 
-    public HabitatModel() {
-        fishData = FishData.getInstance();
+    public Habitat() {
+        modelData = ModelData.getInstance();
         goldenSpawnTime = 3;
         guppySpawnTime = 5;
         goldenLifeTime = 15;
@@ -79,14 +85,14 @@ public class HabitatModel {
     public void setGuppyMaxVelocity(short newMaxVelocity) {this.guppyMaxVelocity=newMaxVelocity;}
     public short getGuppyMaxVelocity() {return this.guppyMaxVelocity;}
 
-    public FishData getFishData() {
-        return this.fishData;
+    public ModelData getFishData() {
+        return this.modelData;
     }
 
     public long getFishAmount(Class clazz){
         long fishAmount = -1;
         if (clazz==GoldenFish.class || clazz== GuppyFish.class){
-            fishAmount=fishData.fishList.stream().filter(obj -> obj.getClass()==clazz).count();
+            fishAmount= modelData.getFishList().stream().filter(obj -> obj.getClass()==clazz).count();
         }
         return fishAmount;
     }
@@ -98,19 +104,34 @@ public class HabitatModel {
         Fish createdFish = null;
             if (clazz==GoldenFish.class){
                 GoldenFish goldenFish = new GoldenFish(x,y,xVelocity,yVelocity,id,birthTime);
-                fishData.fishList.add(goldenFish);
-                fishData.idSet.add(id);
-                fishData.birthTimeTree.put(id, birthTime);
+                modelData.getFishList().add(goldenFish);
+                modelData.getIdSet().add(id);
+                modelData.getBirthTimeTree().put(id, birthTime);
                 createdFish = goldenFish;
             }
             else if (clazz==GuppyFish.class){
                 GuppyFish guppyFish = new GuppyFish(x,y,xVelocity,yVelocity,id,birthTime);
-                fishData.fishList.add(guppyFish);
-                fishData.idSet.add(id);
-                fishData.birthTimeTree.put(id, birthTime);
+                modelData.getFishList().add(guppyFish);
+                modelData.getIdSet().add(id);
+                modelData.getBirthTimeTree().put(id, birthTime);
                 createdFish = guppyFish;
             }
         return createdFish;
+    }
+
+    public Config toConfig() {
+        AtomicReference<Config> configRef = new AtomicReference<>(ConfigFactory.empty());
+        Field[] fieldArray = this.getClass().getDeclaredFields();
+        Arrays.stream(fieldArray).filter(field -> field.getName() != "modelData")
+                .forEach(field -> {
+                    try {
+                        configRef.getAndSet(configRef.get().withValue(field.getName(),
+                                ConfigValueFactory.fromAnyRef(field.get(this))));
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+        return configRef.get();
     }
 
 }

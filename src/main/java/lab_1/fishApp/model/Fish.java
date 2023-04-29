@@ -1,28 +1,29 @@
 package lab_1.fishApp.model;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 
-public abstract class Fish {
+public abstract class Fish implements Serializable {
 
-    private ImageView imageView;
-    private DoubleProperty xCoord, yCoord;
+
+    protected String imagePath;
+    private transient ImageView imageView;
+    private transient DoubleProperty xCoord, yCoord;
     private int xVelocity, yVelocity;
     private int birthTime;
     private int id;
 
-    Fish(String imagePath) throws FileNotFoundException {
-        this(0,0,0,0,0,0,imagePath);
+    Fish() throws FileNotFoundException {
+        this(0,0,0,0,0,0);
     }
 
-    Fish(double x, double y, int xVelocity, int yVelocity, int id, int birthTime, String imagePath) throws FileNotFoundException {
-        Image fishImage = new Image(new FileInputStream(imagePath));
-        this.imageView = new ImageView(fishImage);
+    Fish(double x, double y, int xVelocity, int yVelocity, int id, int birthTime) throws FileNotFoundException {
+        initImagePath();
+        this.imageView = new ImageView( new Image(new FileInputStream(this.imagePath)));
         this.imageView.setPreserveRatio(true);
         this.imageView.setX(x);
         this.imageView.setY(y);
@@ -30,13 +31,18 @@ public abstract class Fish {
         this.imageView.setFitHeight(90);
         this.birthTime=birthTime;
         this.id=id;
-        this.xCoord=this.imageView.xProperty();;
+//        this.xCoord = new SimpleDoubleProperty(x);
+//        this.yCoord = new SimpleDoubleProperty(y);
+//        imageView.xProperty().bind(xCoord);
+//        imageView.yProperty().bind(yCoord);
+        this.xCoord=this.imageView.xProperty();
         this.yCoord=this.imageView.yProperty();
         this.xVelocity=xVelocity;
         this.yVelocity=yVelocity;
     }
 
     Fish(Fish object) {
+        this.imagePath = object.imagePath;
         this.imageView = new ImageView(object.getImageView().getImage());
         this.birthTime = object.birthTime;
         this.id = object.id;
@@ -46,12 +52,31 @@ public abstract class Fish {
         this.yVelocity = object.yVelocity;
     }
 
+    protected abstract void initImagePath();
+
+    public void getPath() {
+        System.out.println(imagePath);
+    }
+
     public ImageView getImageView(){
         return this.imageView;
     }
 
-    public void setImageView(ImageView newImageView) {
-        this.imageView = newImageView;
+    private String _getImageView(){
+        return this.imagePath;
+    }
+
+    public void setImageView(ImageView imageView) {
+        this.imageView=imageView;
+    }
+
+    private void _setImageView(String imagePath) {
+        this.imagePath = imagePath;
+        try {
+            this.imageView = new ImageView(new Image(new FileInputStream(imagePath)));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public int getBirthTime(){
@@ -74,13 +99,15 @@ public abstract class Fish {
         return (int)this.xCoord.get();
     }
 
+    private int _getXCoord() {return (int)this.xCoord.get();}
+
     public void setXCoord(int newXCoord) {
         this.xCoord.set(newXCoord);
     }
 
-    public int getYCoord() {
-        return (int)this.yCoord.get();
-    }
+    private int _getYCoord() {return (int)this.yCoord.get();}
+
+    public int getYCoord() {return (int)this.yCoord.get();}
 
     public void setYCoord(int newYCoord) {
         this.yCoord.set(newYCoord);
@@ -93,5 +120,25 @@ public abstract class Fish {
     public void setYVelocity(int newYVelocity) {this.yVelocity=newYVelocity;}
 
     public int getYVelocity() {return this.yVelocity;}
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeDouble(imageView.getFitWidth());
+        out.writeDouble(imageView.getFitHeight());
+        out.writeDouble(xCoord.get());
+        out.writeDouble(yCoord.get());
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        this.imageView = new ImageView(new Image(new FileInputStream(this.imagePath)));
+        this.imageView.setPreserveRatio(true);
+        this.imageView.setFitWidth(in.readDouble());
+        this.imageView.setFitHeight(in.readDouble());
+        this.imageView.setX(in.readDouble());
+        this.imageView.setY(in.readDouble());
+        this.xCoord = this.imageView.xProperty();
+        this.yCoord = this.imageView.yProperty();
+    }
 
 }

@@ -1,19 +1,11 @@
 package lab_1.fishApp.utils;
 
-import javafx.application.Platform;
 import lab_1.fishApp.model.Fish;
-import lab_1.fishApp.model.FishData;
-import lab_1.fishApp.model.GoldenFish;
+import lab_1.fishApp.model.ModelData;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public abstract class BaseAI {
     private final Object locker;
@@ -25,7 +17,7 @@ public abstract class BaseAI {
     protected int xBound, yBound, movesPerSecond;
 
     public BaseAI(int movesPerSecond, int xBound, int yBound) {
-        this.objectList = FishData.getInstance().fishList;
+        this.objectList = ModelData.getInstance().getFishList();
         this.stopFlag = false;
         this.xBound = xBound;
         this.yBound = yBound;
@@ -55,7 +47,7 @@ public abstract class BaseAI {
                         }
                     }
                 }
-                synchronized (FishData.getInstance().fishList) {
+                synchronized (ModelData.getInstance().getFishList()) {
                     if (!objectList.isEmpty()) {
                        objectList.stream().filter(filter).forEach(mover);
                     }
