@@ -36,7 +36,6 @@ public class TCPServer implements ClientListListener {
             System.out.println("Server client listener was started");
             System.out.println("Server was started\n\n");
             while (!serverSocket.isClosed()) {
-                //if (inBuffer.readLine().equalsIgnoreCase("close")) break;
                 System.out.println("Waiting for new connection...");
                 Socket clientSocket = serverSocket.accept();
                 TCPSingleServerThread newServerThread = serverThreadFactory.newServerThread(clientSocket);
@@ -75,7 +74,7 @@ public class TCPServer implements ClientListListener {
     }
 
     @Override
-    public void handleClientListChanges() {
+    public void handleClientDTO() {
         System.out.println("Checking list of connections for updates");
         if (serverThreadData.isUpdated()) {
             System.out.println("\n\nList of connections gotten updates. Sending to all clients...");

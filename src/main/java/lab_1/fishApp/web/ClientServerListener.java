@@ -15,7 +15,7 @@ public class ClientServerListener extends Thread {
     @Override
     public void run() {
         while (!this.listListener.isClosed() && !stopFlag) {
-            this.listListener.handleClientListChanges();
+            this.listListener.handleClientDTO();
             try {
                 Thread.sleep(this.frequency);
             } catch (InterruptedException e) {
