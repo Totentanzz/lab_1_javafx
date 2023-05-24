@@ -68,13 +68,13 @@ public class ModelData {
         return this.birthTimeTree;
     }
 
-    public LinkedList<String> getClientsNames() {
-        return clientsNames;
-    }
-
     public void setClientsNames(LinkedList<String> newClientNames) {
         this.clientsNames.clear();
         this.clientsNames.addAll(newClientNames);
+    }
+
+    public LinkedList<String> getClientsNames() {
+        return clientsNames;
     }
 
 }

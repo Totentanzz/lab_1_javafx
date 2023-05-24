@@ -11,9 +11,9 @@ import java.util.LinkedList;
 public class TCPServer implements ClientListListener {
 
     private static TCPServerThreadFactory serverThreadFactory;
-    private static TCPServerThreadData serverThreadData;
-    private static ClientServerListener serverThreadDataListener;
-    private static ServerSocket serverSocket;
+    private TCPServerThreadData serverThreadData;
+    private ClientServerListener serverThreadDataListener;
+    private ServerSocket serverSocket;
 
     public TCPServer(Config serverConfig) {
         ThreadGroup serverThreadGroup = new ThreadGroup("serverThreadGroup");
@@ -61,18 +61,6 @@ public class TCPServer implements ClientListListener {
     }
 
 
-    public static void main(String[] args) throws IOException {
-        System.out.println("Creating a server...\nSearching config file...");
-        File configFile = new File("src/main/resources/lab_1/fishApp/webConfig/web.conf");
-        System.out.println("Config file was detected. Loading configurations...");
-        Config serverConfig = ConfigFactory.parseFile(configFile).getConfig("server");
-        TCPServer tcpServer = new TCPServer(serverConfig);
-        System.out.println("Configuration was loaded successfully");
-        System.out.println("Starting server on " + serverConfig.getString("ip")
-                + ":" + serverConfig.getInt("port"));
-        tcpServer.start();
-    }
-
     @Override
     public void handleClientDTO() {
         System.out.println("Checking list of connections for updates");
@@ -93,5 +81,17 @@ public class TCPServer implements ClientListListener {
     @Override
     public boolean isClosed() {
         return serverSocket.isClosed();
+    }
+
+    public static void main(String[] args) throws IOException {
+        System.out.println("Creating a server...\nSearching config file...");
+        File configFile = new File("src/main/resources/lab_1/fishApp/webConfig/web.conf");
+        System.out.println("Config file was detected. Loading configurations...");
+        Config serverConfig = ConfigFactory.parseFile(configFile).getConfig("server");
+        TCPServer tcpServer = new TCPServer(serverConfig);
+        System.out.println("Configuration was loaded successfully");
+        System.out.println("Starting server on " + serverConfig.getString("ip")
+                + ":" + serverConfig.getInt("port"));
+        tcpServer.start();
     }
 }

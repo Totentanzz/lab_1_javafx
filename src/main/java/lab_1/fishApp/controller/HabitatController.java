@@ -542,8 +542,8 @@ public class HabitatController implements Initializable {
                     Config newClientConfig = client.getClientConfig();
                     modelData.setClientsNames(newClientNames);
                     modelData.setConfig(newClientConfig);
-                    loadConfig(newClientConfig);
                     Platform.runLater(() -> {
+                        loadConfig(newClientConfig);
                         clientsLabel.setText(String.join(", ",newClientNames));
                     });
                 }

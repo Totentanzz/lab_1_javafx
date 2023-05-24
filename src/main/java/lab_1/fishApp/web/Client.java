@@ -14,9 +14,9 @@ import java.util.LinkedList;
 
 public class Client implements ClientListListener, Updateable {
 
-    private  Socket clientSocket;
-    private  ObjectOutputStream objectOutStream;
-    private  ObjectInputStream objectInStream;
+    private Socket clientSocket;
+    private ObjectOutputStream objectOutStream;
+    private ObjectInputStream objectInStream;
     private static ClientServerListener serverListener;
     private LinkedList<String> clientNames;
     private Config clientConfig;
@@ -72,17 +72,6 @@ public class Client implements ClientListListener, Updateable {
         return state;
     }
 
-    public void sendClientDTO(ClientDTO clientDTO) {
-        System.out.println("Trying to send DTO data to server...");
-        try {
-            objectOutStream.writeObject(clientDTO);
-            objectOutStream.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("DTO data was sent successfully");
-    }
-
     public ClientDTO getServerReply() {
         System.out.println("Getting server reply...");
         try {
@@ -117,6 +106,17 @@ public class Client implements ClientListListener, Updateable {
 
     public Config getClientConfig() {
         return clientConfig;
+    }
+
+    public void sendClientDTO(ClientDTO clientDTO) {
+        System.out.println("Trying to send DTO data to server...");
+        try {
+            objectOutStream.writeObject(clientDTO);
+            objectOutStream.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("DTO data was sent successfully");
     }
 
     public void requestConfig(String clientName) {
@@ -159,6 +159,14 @@ public class Client implements ClientListListener, Updateable {
             System.out.println(clientNames);
             System.out.println("Client list was updated successfully\n\n");
         }
+        else if (serverReply.getDtoType().equals(ClientDTO.dtoType.SERVER_REPLY)
+                && serverReply.getDtoObject().equals(ClientDTO.dtoObject.CONFIG)) {
+            System.out.println("DTO is CONFIG reply. Updating client...");
+            clientConfig = serverReply.getClientConfig();
+            setUpdated();
+            System.out.println(clientConfig);
+            System.out.println("Client config was updated successfully\n\n");
+        }
         else if (serverReply.getDtoType().equals(ClientDTO.dtoType.SERVER_REQUEST)
                 && serverReply.getDtoObject().equals(ClientDTO.dtoObject.CONFIG)) {
             System.out.println("DTO is CONFIG request. Creating a client reply...");
@@ -170,16 +178,8 @@ public class Client implements ClientListListener, Updateable {
                     .clientName(serverReply.getClientName())
                     .clientConfig(modelData.getConfig()).build();
             sendClientDTO(clientReply);
-            System.out.println(modelData.getConfig());
+            System.out.println(clientReply);
             System.out.println("Client config was sent successfully\n\n");
-        }
-        else if (serverReply.getDtoType().equals(ClientDTO.dtoType.SERVER_REPLY)
-                && serverReply.getDtoObject().equals(ClientDTO.dtoObject.CONFIG)) {
-            System.out.println("DTO is CONFIG reply. Updating client...");
-            clientConfig = serverReply.getClientConfig();
-            setUpdated();
-            System.out.println(clientConfig);
-            System.out.println("Client config was updated successfully\n\n");
         }
     }
 
