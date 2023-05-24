@@ -47,16 +47,26 @@ public class TCPSingleServerThread extends Thread {
                 System.out.println("Received DTO from client: " + hostAddress);
 
                 if (readedObject.getDtoType().equals(ClientDTO.dtoType.CLIENT_REQUEST) &&
-                         readedObject.getDtoObject().equals(ClientDTO.dtoObject.CONFIG)) {
+                        readedObject.getDtoObject().equals(ClientDTO.dtoObject.CONFIG)) {
                     String targetClientName = readedObject.getClientName();
                     TCPSingleServerThread targetThread = serverThreadData.getServerThread(targetClientName);
                     ClientDTO dtoObject = ClientDTO.builder()
                             .dtoType(ClientDTO.dtoType.SERVER_REQUEST)
                             .dtoObject(ClientDTO.dtoObject.CONFIG)
-                            .clientName(targetClientName).build();
+                            .clientName(this.getClientName()).build();
                     targetThread.sendDtoObject(dtoObject);
                 }
-                else if (readedObject.getDtoType().equals(ClientDTO.dtoType.SERVER_REQUEST) && readedObject.getDtoObject().equals(ClientDTO.dtoObject.CONFIG))
+                else if (readedObject.getDtoType().equals(ClientDTO.dtoType.CLIENT_REPLY) &&
+                        readedObject.getDtoObject().equals(ClientDTO.dtoObject.CONFIG)) {
+                    String targetClientName = readedObject.getClientName();
+                    TCPSingleServerThread targetThread = serverThreadData.getServerThread(targetClientName);
+                    ClientDTO dtoObject = ClientDTO.builder()
+                            .dtoType(ClientDTO.dtoType.SERVER_REPLY)
+                            .dtoObject(ClientDTO.dtoObject.CONFIG)
+                            .clientConfig(readedObject.getClientConfig())
+                            .clientName(readedObject.getClientName()).build();
+                    targetThread.sendDtoObject(dtoObject);
+                }
 
                 System.out.println("Server Wrote message to client\n\n");
             }
@@ -113,7 +123,6 @@ public class TCPSingleServerThread extends Thread {
         serverClientList.remove(threadClientName);
         ClientDTO clientDTO = ClientDTO.builder()
                 .dtoType(ClientDTO.dtoType.SERVER_REPLY)
-                .serverMessage(ClientDTO.dtoReply.SUCCESS)
                 .dtoObject(ClientDTO.dtoObject.CLIENT_LIST)
                 .clientList(serverClientList).build();
         try {

@@ -37,6 +37,13 @@ public class TCPServerThreadData implements Updateable  {
         return this.clientNameList;
     }
 
+    public synchronized TCPSingleServerThread getServerThread(String clientName) {
+        TCPSingleServerThread targetThread = serverThreadData.getServerThreadList().stream()
+                .filter(serverThread -> serverThread.getClientName().equals(clientName))
+                .collect(Collectors.toList()).get(0);
+        return targetThread;
+    }
+
     public synchronized void addServerThread(TCPSingleServerThread serverThread) {
         String clientName = serverThread.getClientName();
         this.serverThreadList.add(serverThread);
@@ -51,13 +58,6 @@ public class TCPServerThreadData implements Updateable  {
         this.clientNameList.remove(clientName);
         this.setUpdated();
         System.out.println(this.serverThreadList);
-    }
-
-    public synchronized TCPSingleServerThread getServerThread(String clientName) {
-        TCPSingleServerThread targetThread = serverThreadData.getServerThreadList().stream()
-                .filter(serverThread -> serverThread.getClientName().equals(clientName))
-                .collect(Collectors.toList()).get(0);
-        return targetThread;
     }
 
     public boolean isUpdated() {

@@ -112,8 +112,8 @@ public class HabitatController implements Initializable {
     @FXML
     private void handleCloseRequest() {
         timer.cancel();
-        client.stopConnection();
         this.clientListener.stopListener();
+        client.stopConnection();
         this.saveConfig(new File("src/main/resources/lab_1/fishApp/clientConfig/default.conf"));
         this.mainStage.close();
     }
@@ -493,8 +493,17 @@ public class HabitatController implements Initializable {
             DialogWindow<ButtonType> window = new DialogWindow<>(DialogWindow.DialogType.OBJECTS);
             window.initOwner(mainStage);
             window.showAndWait();
-            startFlag = true;
+            startFlag = startButton.isDisabled();
             checkBoxesAndAI();
+        });
+        clientsButton.setOnAction(actionEvent -> {
+            startFlag = false;
+            Stream.of(goldenFishAI, guppyFishAI).forEach(BaseAI::pauseAI);
+            DialogWindow<ButtonType> window = new DialogWindow<>(DialogWindow.DialogType.CLIENTS, client);
+            window.initOwner(mainStage);
+            window.showAndWait();
+            startFlag = startButton.isDisabled();
+            if (startFlag) checkBoxesAndAI();
         });
     }
 
@@ -526,11 +535,15 @@ public class HabitatController implements Initializable {
     private void initClientListener() {
         clientListener = new ClientServerListener(new ClientListListener() {
             @Override
-            public void handleClientListChanges() {
+            public void handleClientDTO() {
                 if (client.isUpdated()) {
+                    ModelData modelData = ModelData.getInstance();
                     LinkedList<String> newClientNames = client.getClientNames();
-                    ModelData.getInstance().setClientsNames(newClientNames);
+                    Config newClientConfig = client.getClientConfig();
+                    modelData.setClientsNames(newClientNames);
+                    modelData.setConfig(newClientConfig);
                     Platform.runLater(() -> {
+                        loadConfig(newClientConfig);
                         clientsLabel.setText(String.join(", ",newClientNames));
                     });
                 }

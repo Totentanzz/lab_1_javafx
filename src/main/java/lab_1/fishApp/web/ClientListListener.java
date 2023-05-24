@@ -1,6 +1,6 @@
 package lab_1.fishApp.web;
 
 public interface ClientListListener {
-    void handleClientListChanges();
+    void handleClientDTO();
     boolean isClosed();
 }

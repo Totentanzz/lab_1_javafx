@@ -32,7 +32,8 @@ public class ClientDTO implements Serializable {
         CLIENT_REQUEST,
         CLIENT_REPLY,
         SERVER_REQUEST,
-        SERVER_REPLY;
+        SERVER_REPLY,
+        SERVER_ERROR;
     }
 
     public enum dtoReply {

@@ -98,7 +98,10 @@ public class DialogWindow<T> extends Dialog<T> {
                 clientTable.setRowFactory(callback -> {
                     TableRow<String> row = new TableRow<>();
                     row.setOnMouseClicked(event -> {
-                        client.requestConfig(row.getItem());
+                        if (event.getClickCount() == 2) {
+                            System.out.println(client);
+                            client.requestConfig(row.getItem());
+                        }
                     });
                     return row;
                 });
