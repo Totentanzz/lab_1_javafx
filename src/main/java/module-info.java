@@ -3,6 +3,7 @@ module lab_1.fishApp {
     requires javafx.fxml;
     requires typesafe.config;
     requires lombok;
+    requires java.sql;
 
     exports lab_1.fishApp;
     opens lab_1.fishApp to javafx.graphics;

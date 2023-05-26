@@ -4,6 +4,7 @@ import com.typesafe.config.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -217,21 +218,12 @@ public class HabitatController implements Initializable {
         Stream.of(goldenFishAI, guppyFishAI).forEach(BaseAI::pauseAI);
         File loadedFile = FileExplorer.getFile(FileExplorer.ActionType.LOAD,
                 FileExplorer.FileType.OBJECT,this.mainScene.getWindow());
-        ModelData modelData = ModelData.getInstance();
         if (loadedFile!=null) {
             try {
                 FileInputStream fileIn = new FileInputStream(loadedFile);
                 ObjectInputStream in = new ObjectInputStream(fileIn);
                 LinkedList<Fish> loadedList = (LinkedList<Fish>) in.readObject();
-                imagePane.getChildren().clear();
-                modelData.clearCollections();
-                loadedList.stream().forEach(fish->{
-                    fish.setBirthTime((int)this.simulationTime.toSeconds());
-                    modelData.getFishList().add(fish);
-                    modelData.getIdSet().add(fish.getId());
-                    modelData.getBirthTimeTree().put(fish.getId(), fish.getBirthTime());
-                    imagePane.getChildren().add(fish.getImageView());
-                });
+                loadObjects(loadedList);
                 in.close();
                 fileIn.close();
             } catch (IOException e) {
@@ -243,6 +235,20 @@ public class HabitatController implements Initializable {
         }
         startFlag = startButton.isDisabled();
         if (startFlag) checkBoxesAndAI();
+    }
+
+    private void loadObjects(LinkedList<Fish> loadedList) {
+        ModelData modelData = ModelData.getInstance();
+        imagePane.getChildren().clear();
+        modelData.clearCollections();
+        loadedList.stream().forEach(fish->{
+            if (simulationTime!=null) fish.setBirthTime((int)this.simulationTime.toSeconds());
+            else fish.setBirthTime(0);
+            modelData.getFishList().add(fish);
+            modelData.getIdSet().add(fish.getId());
+            modelData.getBirthTimeTree().put(fish.getId(), fish.getBirthTime());
+            imagePane.getChildren().add(fish.getImageView());
+        });
     }
 
     private void startSimulation() {
@@ -538,14 +544,26 @@ public class HabitatController implements Initializable {
             public void handleClientDTO() {
                 if (client.isUpdated()) {
                     ModelData modelData = ModelData.getInstance();
-                    LinkedList<String> newClientNames = client.getClientNames();
-                    Config newClientConfig = client.getClientConfig();
-                    modelData.setClientsNames(newClientNames);
-                    modelData.setConfig(newClientConfig);
-                    Platform.runLater(() -> {
-                        loadConfig(newClientConfig);
-                        clientsLabel.setText(String.join(", ",newClientNames));
-                    });
+                    if (client.getUpdateTypes().equals(Client.updateType.CLIENT_LIST)) {
+                        LinkedList<String> newClientNames = client.getClientNames();
+                        modelData.setClientsNames(newClientNames);
+                        Platform.runLater(()->clientsLabel.setText(String.join(", ",newClientNames)));
+                    }
+                    else if (client.getUpdateTypes().equals(Client.updateType.CONFIG)) {
+                        Config newClientConfig = client.getClientConfig();
+                        modelData.setConfig(newClientConfig);
+                        Platform.runLater(()->loadConfig(newClientConfig));
+                    }
+                    else {
+                        LinkedList<Fish> loadedList = client.getClientFishList();
+                        if (loadedList!=null) {
+                            startFlag = false;
+                            Stream.of(goldenFishAI, guppyFishAI).forEach(BaseAI::pauseAI);
+                            Platform.runLater(()->loadObjects(loadedList));
+                            startFlag = startButton.isDisabled();
+                            if (startFlag) checkBoxesAndAI();
+                        }
+                    }
                 }
                 client.setToDefaultState();
             }
@@ -576,4 +594,19 @@ public class HabitatController implements Initializable {
         guppyFishAI = new GuppyFishAI((int) imagePane.getPrefWidth(), (int) imagePane.getPrefHeight());;
     }
 
+    public void uploadToDb(ActionEvent actionEvent) {
+        Runnable task = ()->{
+            LinkedList<Fish> fishList = new LinkedList<>(ModelData.getInstance().getFishList());
+            client.uploadObjects(fishList);
+        };
+        new Thread(task).start();
+    }
+
+
+    public void downloadFromDb(ActionEvent actionEvent) {
+        Runnable task = ()->{
+            client.downloadObjects();
+        };
+        new Thread(task).start();
+    }
 }

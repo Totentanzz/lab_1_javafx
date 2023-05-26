@@ -17,9 +17,10 @@ public class ClientDTO implements Serializable {
     private dtoType dtoType;
     private dtoObject dtoObject;
     private dtoReply serverMessage;
+    private dtoOperation dtoOperation;
     private String clientName;
-    private LinkedList<Fish> clientFishList;
     private LinkedList<String> clientList;
+    private byte[] clientObjects;
     private Config clientConfig;
 
     public enum dtoObject {
@@ -39,6 +40,11 @@ public class ClientDTO implements Serializable {
     public enum dtoReply {
         SUCCESS,
         ERROR;
+    }
+
+    public enum dtoOperation {
+        UPLOAD,
+        DOWNLOAD;
     }
 
 }

@@ -188,6 +188,8 @@
                            <items>
                              <MenuItem mnemonicParsing="false" onAction="#SerializeAndSave" text="Save objects" />
                               <MenuItem mnemonicParsing="false" onAction="#DeserializeAndLoad" text="Load objects" />
+                              <MenuItem mnemonicParsing="false" onAction="#uploadToDb" text="Upload objects" />
+                              <MenuItem mnemonicParsing="false" onAction="#downloadFromDb" text="Download objects" />
                            </items>
                          </Menu>
                          <Menu mnemonicParsing="false" text="Help">
